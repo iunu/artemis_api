@@ -20,7 +20,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+In order to use this gem, you will need to be set up as a developer in the Artemis Portal. If you're not, please contact Artemis CS in order to get that settled.
+
+Once you have developer access, go to Settings and choose "OAuth 2.0 Applications" at the bottom of the sidebar to set up an application by entering the name and redirect URI you wish to use. You will then be provided with an application ID and a secret ID, which you will need in order to authenticate with Artemis.
+
+(Please note that this gem doesn't currently handle OAuth. You will need to do that on your own in order to generate your access token and refresh token. We recommend using the [OAuth2 gem](https://github.com/oauth-xx/oauth2))
+
+Once you have all this info, the first step to actually using this gem is to instantiate an instance of `ArtemisApi::Client` - which can be done one of two ways.
+
+```ruby
+options = {app_id: 'your_artemis_application_id',
+           app_secret: 'your_artemis_secret_id',
+           base_uri: 'https://portal.artemisag.com'}
+client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', options)
+ ```
+
+ Alternatively, instead of passing in options, you can set those values as ENV variables called `ENV['ARTEMIS_OAUTH_APP_ID']`, `ENV['ARTEMIS_OAUTH_APP_SECRET']` and `ENV['ARTEMIS_BASE_URI']` - they will be automatically detected and then you don't have to pass in any options and you can just do `client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token')`
 
 ## Development
 
