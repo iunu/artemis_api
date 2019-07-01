@@ -33,9 +33,28 @@ options = {app_id: 'your_artemis_application_id',
            app_secret: 'your_artemis_secret_id',
            base_uri: 'https://portal.artemisag.com'}
 client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', options)
- ```
+```
 
- Alternatively, instead of passing in options, you can set those values as ENV variables called `ENV['ARTEMIS_OAUTH_APP_ID']`, `ENV['ARTEMIS_OAUTH_APP_SECRET']` and `ENV['ARTEMIS_BASE_URI']` - they will be automatically detected and then you don't have to pass in any options and you can just do `client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token')`
+Alternatively, instead of passing in options, you can set those values as ENV variables called `ENV['ARTEMIS_OAUTH_APP_ID']`, `ENV['ARTEMIS_OAUTH_APP_SECRET']` and `ENV['ARTEMIS_BASE_URI']`
+
+They will be automatically detected and then you don't have to pass in any options: `client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token')`
+
+Once you have a client instance, you can use it to request information from Artemis.
+
+To get user information about the Artemis User that is associated with your application ID:
+```ruby
+ArtemisApi::User.get_current(client)
+```
+
+To get a list of all Artemis Facilities that you have access to:
+```ruby
+ArtemisApi::Facility.find_all(client)
+```
+
+To get facility information about a single Artemis Facility that you have access to, by its Artemis ID:
+```ruby
+ArtemisApi::Facility.find(2, client)
+```
 
 ## Development
 
