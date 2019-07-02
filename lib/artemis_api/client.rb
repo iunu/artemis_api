@@ -26,9 +26,27 @@ module ArtemisApi
       obj
     end
 
+    def find_one_by_facility(type, id, facility_id, force = false)
+      obj = get_record(type, id)
+      if !obj || force
+        response = @oauth_token.get("#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/#{type}/#{id}")
+        obj = process_response(response, type) if response.status == 200
+      end
+      obj
+    end
+
     def find_all(type, params = nil)
       records = []
       response = @oauth_token.get("#{@options[:base_uri]}/api/v3/#{type}")
+      if response.status == 200
+        records = process_array(response, type, records)
+      end
+      records
+    end
+
+    def find_all_by_facility(type, facility_id, params = nil)
+      records = []
+      response = @oauth_token.get("#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/#{type}")
       if response.status == 200
         records = process_array(response, type, records)
       end
