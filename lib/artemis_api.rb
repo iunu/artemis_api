@@ -3,6 +3,8 @@ require "artemis_api/model"
 require "artemis_api/facility"
 require "artemis_api/user"
 require "artemis_api/version"
+require "artemis_api/zone"
+require "artemis_api/organization"
 
 module ArtemisApi
   # Your code goes here...

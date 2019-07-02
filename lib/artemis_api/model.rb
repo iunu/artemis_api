@@ -14,6 +14,14 @@ module ArtemisApi
       end
     end
 
+    def self.find(id, client)
+      client.find_one(self.json_type, id)
+    end
+
+    def self.find_all(client)
+      client.find_all(self.json_type)
+    end
+
     def self.json_type(type = nil)
       if type
         @json_type = type
@@ -24,7 +32,6 @@ module ArtemisApi
     end
 
     def self.instance_for(type, data, client)
-      # TODO: Issue: @@registered_classes is empty unless you explicitly call json_type on the models first
       @@registered_classes[type]&.new(client, data)
     end
 

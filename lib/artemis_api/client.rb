@@ -21,16 +21,7 @@ module ArtemisApi
       obj = get_record(type, id)
       if !obj || force
         response = @oauth_token.get("#{@options[:base_uri]}/api/v3/#{type}/#{id}")
-        if response.status == 200
-          json = JSON.parse(response.body)
-          obj = store_record(type, id, json['data'])
-
-          #if json['included']
-          #  json['included'].each do |included_obj|
-          #    store_record(included_obj['type'], included_obj['id'], included_obj)
-          #  end
-          #end
-        end
+        obj = process_response(response, type) if response.status == 200
       end
       obj
     end
@@ -39,17 +30,7 @@ module ArtemisApi
       records = []
       response = @oauth_token.get("#{@options[:base_uri]}/api/v3/#{type}")
       if response.status == 200
-        json = JSON.parse(response.body)
-        json['data'].each do |obj|
-          record = store_record(type, obj['id'], obj)
-          records << record
-        end
-
-        #if json['included']
-        #  json['included'].each do |included_obj|
-        #    store_record(included_obj['type'], included_obj['id'], included_obj)
-        #  end
-        #end
+        records = process_array(response, type, records)
       end
       records
     end
@@ -65,6 +46,37 @@ module ArtemisApi
 
     def refresh
       @oauth_token = @oauth_token.refresh!
+    end
+
+    private
+
+    def process_response(response, type)
+      json = JSON.parse(response.body)
+      obj = store_record(type, json['id'], json['data'])
+
+      #if json['included']
+      #  json['included'].each do |included_obj|
+      #    store_record(included_obj['type'], included_obj['id'], included_obj)
+      #  end
+      #end
+
+      obj
+    end
+
+    def process_array(response, type, records)
+      json = JSON.parse(response.body)
+      json['data'].each do |obj|
+        record = store_record(type, obj['id'], obj)
+        records << record
+      end
+
+      #if json['included']
+      #  json['included'].each do |included_obj|
+      #    store_record(included_obj['type'], included_obj['id'], included_obj)
+      #  end
+      #end
+
+      records
     end
   end
 end
