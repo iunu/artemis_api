@@ -29,4 +29,14 @@ class OrganizationTest < Minitest::Test
     org = ArtemisApi::Organization.find(2, @client)
     assert_equal 'Rare Dankness', org.name
   end
+
+  def test_getting_orgs_with_facilities_included
+    stub_request(:get, 'http://localhost:3000/api/v3/organizations/2?include=facilities')
+      .to_return(body: {data: {id: '2', type: 'organizations', attributes: {id: 2, name: 'Rare Dankness'}}, included: [{id: 1, type: "facilities", attributes: {id: 1, name: 'Sky Fresh'}}]}.to_json)
+
+    org = ArtemisApi::Organization.find(2, @client, include: 'facilities')
+    facility = ArtemisApi::Facility.find(1, @client)
+    assert_equal 'Rare Dankness', org.name
+    assert_equal 'Sky Fresh', facility.name
+  end
 end
