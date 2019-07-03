@@ -11,11 +11,11 @@ module ArtemisApi
     end
 
     def zones
-      client.find_all_by_facility(ArtemisApi::Zone.json_type, id)
+      client.find_all(ArtemisApi::Zone.json_type, facility_id: id)
     end
 
     def find_zone(zone_id)
-      client.find_one_by_facility(ArtemisApi::Zone.json_type, zone_id, id)
+      client.find_one(ArtemisApi::Zone.json_type, zone_id, facility_id: id)
     end
   end
 end
