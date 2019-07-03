@@ -20,6 +20,7 @@ module ArtemisApi
     def find_one(type, id, force = false)
       obj = get_record(type, id)
       if !obj || force
+        refresh if @oauth_token.expired?
         response = @oauth_token.get("#{@options[:base_uri]}/api/v3/#{type}/#{id}")
         obj = process_response(response, type) if response.status == 200
       end
@@ -29,6 +30,7 @@ module ArtemisApi
     def find_one_by_facility(type, id, facility_id, force = false)
       obj = get_record(type, id)
       if !obj || force
+        refresh if @oauth_token.expired?
         response = @oauth_token.get("#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/#{type}/#{id}")
         obj = process_response(response, type) if response.status == 200
       end
@@ -37,6 +39,7 @@ module ArtemisApi
 
     def find_all(type, params = nil)
       records = []
+      refresh if @oauth_token.expired?
       response = @oauth_token.get("#{@options[:base_uri]}/api/v3/#{type}")
       if response.status == 200
         records = process_array(response, type, records)
@@ -46,6 +49,7 @@ module ArtemisApi
 
     def find_all_by_facility(type, facility_id, params = nil)
       records = []
+      refresh if @oauth_token.expired?
       response = @oauth_token.get("#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/#{type}")
       if response.status == 200
         records = process_array(response, type, records)
@@ -72,11 +76,11 @@ module ArtemisApi
       json = JSON.parse(response.body)
       obj = store_record(type, json['id'], json['data'])
 
-      #if json['included']
-      #  json['included'].each do |included_obj|
-      #    store_record(included_obj['type'], included_obj['id'], included_obj)
-      #  end
-      #end
+      if json['included']
+        json['included'].each do |included_obj|
+          store_record(included_obj['type'], included_obj['id'], included_obj)
+        end
+      end
 
       obj
     end

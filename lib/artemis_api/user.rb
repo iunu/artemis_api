@@ -5,6 +5,7 @@ module ArtemisApi
 
     def self.get_current(client)
       self.json_type
+      client.refresh if client.oauth_token.expired?
       response = client.oauth_token.get("#{client.options[:base_uri]}/api/v3/user")
       if response.status == 200
         json = JSON.parse(response.body)
