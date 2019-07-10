@@ -15,7 +15,7 @@ class ZoneTest < Minitest::Test
       .to_return(body: {data: [{id: '1', type: 'zones', attributes: {id: 1, name: 'Germination'}}, {id: '2', type: 'zones', attributes: {id: 2, name: 'Propagation'}}]}.to_json)
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/zones/2")
-      .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Propagation'}}}.to_json)
+      .to_return(body: {data: {id: '2', type: 'zones', attributes: {id: 2, name: 'Propagation'}}}.to_json)
   end
 
   def test_finding_all_zones
