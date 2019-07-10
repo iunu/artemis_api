@@ -5,7 +5,9 @@ class FacilityTest < Minitest::Test
     options = {app_id: '12345',
                app_secret: '67890',
                base_uri: 'http://localhost:3000'}
-    @client = ArtemisApi::Client.new('ya29', 'eyJh', options)
+
+    todays_date = DateTime.now
+    @client = ArtemisApi::Client.new('ya29', 'eyJh', 7200, todays_date, options)
 
     stub_request(:get, 'http://localhost:3000/api/v3/facilities')
       .to_return(body: {data: [{id: '1', type: 'facilities', attributes: {id: 1, name: 'Sky Fresh'}}, {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}]}.to_json)
