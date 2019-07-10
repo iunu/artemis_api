@@ -1,5 +1,6 @@
 module ArtemisApi
   class Client
+    require 'oauth2'
     attr_reader :options, :objects, :access_token, :refresh_token, :oauth_client, :oauth_token
 
     def initialize(access_token, refresh_token, options = {})
