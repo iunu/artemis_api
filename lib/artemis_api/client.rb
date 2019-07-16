@@ -89,6 +89,7 @@ module ArtemisApi
     end
 
     def process_included_objects(included_array)
+      puts "**** included: #{included_array}"
       included_array.each do |included_obj|
         store_record(included_obj['type'], included_obj['id'], included_obj)
       end

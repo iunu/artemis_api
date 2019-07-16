@@ -16,6 +16,9 @@ class BatchTest < Minitest::Test
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/batches/2")
       .to_return(body: {data: {id: '2', type: 'batches', attributes: {id: 2, arbitrary_id: 'Jun19-Bok-Cho'}}}.to_json)
+
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/batches/2?include=zone")
+      .to_return(body: {data: {id: '2', type: 'batches', attributes: {id: 2, arbitrary_id: 'Jun19-Bok-Cho'}}}.to_json)
   end
 
   def test_finding_all_batches
