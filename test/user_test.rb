@@ -11,6 +11,9 @@ class UserTest < Minitest::Test
 
     stub_request(:get, 'http://localhost:3000/api/v3/user')
       .to_return(body: {data: {id: '41', type: 'users', attributes: {id: 41, full_name: 'Jamey Hampton', email: 'jhampton@artemisag.com'}}}.to_json)
+
+    stub_request(:get, 'http://localhost:3000/api/v3/facilities/2/users')
+      .to_return(body: {data: [{id: '41', type: 'users', attributes: {id: 41, full_name: 'Jamey Hampton', email: 'jhampton@artemisag.com'}}, {id: '42', type: 'users', attributes: {id: 42, full_name: 'Developer', email: 'developer@artemisag.com'}}]}.to_json)
   end
 
   def test_getting_current_user
@@ -18,5 +21,19 @@ class UserTest < Minitest::Test
     assert_equal user.id, 41
     assert_equal user.full_name, 'Jamey Hampton'
     assert_equal user.email, 'jhampton@artemisag.com'
+  end
+
+  def test_finding_all_users
+    users = ArtemisApi::User.find_all(2, @client)
+    assert_equal 2, users.count
+  end
+
+  def test_finding_a_specific_user
+    stub_request(:get, 'http://localhost:3000/api/v3/facilities/2/users/42')
+      .to_return(body: {data: {id: '42', type: 'users', attributes: {id: 42, full_name: 'Developer', email: 'developer@artemisag.com'}}}.to_json)
+
+    user = ArtemisApi::User.find(42, 2, @client)
+    assert_equal user.full_name, 'Developer'
+    assert_equal user.email, 'developer@artemisag.com'
   end
 end
