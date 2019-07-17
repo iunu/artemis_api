@@ -9,7 +9,7 @@ class UserTest < Minitest::Test
     todays_date = DateTime.now
     @client = ArtemisApi::Client.new('ya29', 'eyJh', 7200, todays_date, options)
 
-    stub_request(:get, 'http://localhost:3000/api/v3/user')
+    stub_request(:get, 'http://localhost:3000/api/v3/users/current')
       .to_return(body: {data: {id: '41', type: 'users', attributes: {id: 41, full_name: 'Jamey Hampton', email: 'jhampton@artemisag.com'}}}.to_json)
 
     stub_request(:get, 'http://localhost:3000/api/v3/facilities/2/users')

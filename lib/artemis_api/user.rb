@@ -5,7 +5,7 @@ module ArtemisApi
 
     def self.get_current(client)
       self.json_type
-      response = client.oauth_token.get("#{client.options[:base_uri]}/api/v3/user")
+      response = client.oauth_token.get("#{client.options[:base_uri]}/api/v3/users/current")
       if response.status == 200
         json = JSON.parse(response.body)
         obj = client.store_record('users', json['data']['id'], json['data'])
