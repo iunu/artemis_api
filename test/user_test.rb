@@ -50,6 +50,8 @@ class UserTest < Minitest::Test
     assert_equal user.full_name, 'Developer'
     assert_equal user.email, 'developer@artemisag.com'
     assert_equal @client.objects['organizations'].count, 1
-    assert_equal @client.objects['organizations'].first.name, 'Vegetable Sky'
+
+    organization = ArtemisApi::Organization.find(1, @client)
+    assert_equal organization.name, 'Vegetable Sky'
   end
 end
