@@ -1,19 +1,28 @@
 module ArtemisApi
   class Client
     require 'oauth2'
-    attr_reader :options, :objects, :access_token, :refresh_token, :oauth_client, :oauth_token
+    attr_reader :options, :objects, :access_token, :refresh_token, :oauth_client,
+                :oauth_token, :expires_in, :created_at, :expires_at
 
-    def initialize(access_token, refresh_token, options = {})
+    def initialize(access_token, refresh_token, expires_in, created_at, options = {})
       options[:app_id] ||= ENV['ARTEMIS_OAUTH_APP_ID']
       options[:app_secret] ||= ENV['ARTEMIS_OAUTH_APP_SECRET']
       options[:base_uri] ||= ENV['ARTEMIS_BASE_URI']
       @options = options
       @access_token = access_token
       @refresh_token = refresh_token
+      @expires_in = expires_in
+      @created_at = created_at
+      @expires_at = created_at.strftime('%s').to_i + expires_in
 
       @oauth_client = OAuth2::Client.new(@options[:app_id], @options[:app_secret], site: @options[:base_uri])
-      @oauth_token = OAuth2::AccessToken.from_hash(oauth_client, {access_token: @access_token, refresh_token: @refresh_token})
-
+      @oauth_token = OAuth2::AccessToken.from_hash(
+                      oauth_client,
+                      {access_token: @access_token,
+                       refresh_token: @refresh_token,
+                       created_at: @created_at,
+                       expires_in: @expires_in,
+                       expires_at: @expires_at})
       @objects = {}
     end
 
@@ -89,7 +98,6 @@ module ArtemisApi
     end
 
     def process_included_objects(included_array)
-      puts "**** included: #{included_array}"
       included_array.each do |included_obj|
         store_record(included_obj['type'], included_obj['id'], included_obj)
       end
