@@ -2,8 +2,8 @@ module ArtemisApi
   class Facility < ArtemisApi::Model
     json_type 'facilities'
 
-    def self.find(id, client, include: nil)
-      client.find_one(self.json_type, id, include: include)
+    def self.find(id, client, include: nil, force: false)
+      client.find_one(self.json_type, id, include: include, force: force)
     end
 
     def self.find_all(client, include: nil)
