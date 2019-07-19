@@ -44,7 +44,7 @@ class UserTest < Minitest::Test
                          {id: '42',
                           type: 'users',
                           attributes: {id: 42, full_name: 'Developer', email: 'developer@artemisag.com'}},
-                        included: [{"id"=>"1", "type"=>"organizations", "attributes"=>{"id"=>1, "name"=>"Vegetable Sky"}}]}.to_json)
+                        included: [{id: '1', type: 'organizations', attributes: {id: 1, name: 'Vegetable Sky'}}]}.to_json)
 
     user = ArtemisApi::User.find(42, 2, @client, include: "organizations")
     assert_equal user.full_name, 'Developer'
