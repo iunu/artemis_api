@@ -54,7 +54,7 @@ module ArtemisApi
               "#{@options[:base_uri]}/api/v3/#{type}"
             end
       url = "#{url}?include=#{include}" if include
-      url = "#{url}#{format_filters(filters)}" if filters
+      url = "#{url}?#{format_filters(filters)}" if filters
 
       response = @oauth_token.get(url)
       if response.status == 200
@@ -76,7 +76,7 @@ module ArtemisApi
       @oauth_token = @oauth_token.refresh!
     end
 
-    #private
+    private
 
     def process_response(response, type)
       json = JSON.parse(response.body)
@@ -108,10 +108,10 @@ module ArtemisApi
       filter_hash.each do |k, v|
         if v.kind_of?(Array)
           v.each do |item|
-            filter_string += "?filter[#{k}][]=#{item}"
+            filter_string += "filter[#{k}][]=#{item}&"
           end
         else
-          filter_string += "?filter[#{k}]=#{v}"
+          filter_string += "filter[#{k}]=#{v}&"
         end
       end
       filter_string
