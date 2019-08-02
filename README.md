@@ -26,20 +26,20 @@ Once you have developer access, go to Settings and choose "OAuth 2.0 Application
 
 (Please note that this gem doesn't currently handle OAuth. You will need to do that on your own in order to generate your access token and refresh token. We recommend using the [OAuth2 gem](https://github.com/oauth-xx/oauth2))
 
-Once you have all this info, the first step to actually using this gem is to instantiate an instance of `ArtemisApi::Client` - which can be done one of two ways.
+Once you have all this info, the first step to actually using this gem is to instantiate an instance of `ArtemisApi::Client` - which requires an access token, a refresh token,
 
 ```ruby
 options = {app_id: 'your_artemis_application_id',
            app_secret: 'your_artemis_secret_id',
            base_uri: 'https://portal.artemisag.com'}
-client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', options)
+client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', 7200, Time.zone.now, options)
 ```
 
 Alternatively, instead of passing in options, you can set those values as ENV variables called `ENV['ARTEMIS_OAUTH_APP_ID']`, `ENV['ARTEMIS_OAUTH_APP_SECRET']` and `ENV['ARTEMIS_BASE_URI']`
 
 They will be automatically detected and then you don't have to pass in any options:
 ```ruby
-client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token')
+client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', 7200, Time.zone.now)
 ```
 
 Once you have a client instance, you can use it to request information from Artemis.
