@@ -6,13 +6,12 @@ class ClientTest < Minitest::Test
                app_secret: '67890',
                base_uri: 'http://localhost:3000'}
 
-    todays_date = DateTime.now
-    client = ArtemisApi::Client.new('ya29', 'eyJh', 7200, todays_date, options)
+    tomorrows_date = 1.days.from_now
+    client = ArtemisApi::Client.new('ya29', 'eyJh', tomorrows_date, options)
 
     assert_equal '12345', client.oauth_client.id
     assert_equal 'ya29', client.oauth_token.token
-    assert_equal todays_date, client.oauth_token.params[:created_at]
-    assert_equal 7200, client.oauth_token.expires_in
+    assert_equal tomorrows_date.to_i, client.oauth_token.expires_at
     assert_equal false, client.oauth_token.expired?
   end
 end
