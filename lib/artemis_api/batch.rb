@@ -10,8 +10,8 @@ module ArtemisApi
       client.find_all(self.json_type, facility_id: facility_id, include: include, filters: filters)
     end
 
-    def actions
-      ArtemisApi::Action.find_all(facility_id, client, filters: {crop_batch_ids: [id]})
+    def completions
+      ArtemisApi::Completion.find_all(facility_id, client, filters: {crop_batch_ids: [id]})
     end
   end
 end

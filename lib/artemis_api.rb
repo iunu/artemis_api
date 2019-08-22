@@ -6,7 +6,7 @@ require "artemis_api/version"
 require "artemis_api/zone"
 require "artemis_api/organization"
 require "artemis_api/batch"
-require "artemis_api/action"
+require "artemis_api/completion"
 
 module ArtemisApi
   # Your code goes here...
