@@ -40,7 +40,7 @@ module ArtemisApi
       obj
     end
 
-    def find_all(type, facility_id: nil, include: nil, params: nil)
+    def find_all(type, facility_id: nil, include: nil, filters: nil)
       records = []
       refresh if @oauth_token.expired?
 
@@ -50,7 +50,7 @@ module ArtemisApi
               "#{@options[:base_uri]}/api/v3/#{type}"
             end
       url = "#{url}?include=#{include}" if include
-      url = "#{url}?params=#{params}" if params
+      url = "#{url}?#{format_filters(filters)}" if filters
 
       response = @oauth_token.get(url)
       if response.status == 200
@@ -97,6 +97,20 @@ module ArtemisApi
       included_array.each do |included_obj|
         store_record(included_obj['type'], included_obj['id'], included_obj)
       end
+    end
+
+    def format_filters(filter_hash)
+      filter_string = ''
+      filter_hash.each do |k, v|
+        if v.kind_of?(Array)
+          v.each do |item|
+            filter_string += "filter[#{k}][]=#{item}&"
+          end
+        else
+          filter_string += "filter[#{k}]=#{v}&"
+        end
+      end
+      filter_string
     end
   end
 end

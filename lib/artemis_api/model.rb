@@ -24,7 +24,6 @@ module ArtemisApi
     end
 
     def self.instance_for(type, data, client)
-      # TODO: Issue: @@registered_classes is empty unless you explicitly call json_type on the models first
       @@registered_classes[type]&.new(client, data)
     end
 
