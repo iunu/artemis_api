@@ -2,11 +2,7 @@ require "test_helper"
 
 class CompletionTest < Minitest::Test
   def setup
-    options = {app_id: '12345',
-               app_secret: '67890',
-               base_uri: 'http://localhost:3000'}
-    todays_date = DateTime.now
-    @client = ArtemisApi::Client.new('ya29', 'eyJh', 7200, todays_date, options)
+    get_client
 
     stub_request(:get, 'http://localhost:3000/api/v3/facilities/2')
       .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}}.to_json)

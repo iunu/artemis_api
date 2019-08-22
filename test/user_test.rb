@@ -2,12 +2,7 @@ require "test_helper"
 
 class UserTest < Minitest::Test
   def setup
-    options = {app_id: '12345',
-               app_secret: '67890',
-               base_uri: 'http://localhost:3000'}
-
-    todays_date = DateTime.now
-    @client = ArtemisApi::Client.new('ya29', 'eyJh', 7200, todays_date, options)
+    get_client
 
     stub_request(:get, 'http://localhost:3000/api/v3/user')
       .to_return(body: {data: {id: '41', type: 'users', attributes: {id: 41, full_name: 'Jamey Hampton', email: 'jhampton@artemisag.com'}}}.to_json)
@@ -51,6 +46,8 @@ class UserTest < Minitest::Test
     assert_equal user.email, 'developer@artemisag.com'
     assert_equal @client.objects['organizations'].count, 1
 
+    # Since the organization has already been included and stored in the client objects array,
+    # this call doesn't actually hit the API and consdoesn't need to be stubbed.
     organization = ArtemisApi::Organization.find(1, @client)
     assert_equal organization.name, 'Vegetable Sky'
   end

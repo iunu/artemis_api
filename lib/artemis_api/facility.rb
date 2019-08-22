@@ -11,19 +11,19 @@ module ArtemisApi
     end
 
     def zones
-      client.find_all(ArtemisApi::Zone.json_type, facility_id: id)
+      ArtemisApi::Zone.find_all(id, client)
     end
 
     def find_zone(zone_id)
-      client.find_one(ArtemisApi::Zone.json_type, zone_id, facility_id: id)
+      ArtemisApi::Zone.find(zone_id, id, client)
     end
 
     def batches
-      client.find_all(ArtemisApi::Batch.json_type, facility_id: id)
+      ArtemisApi::Batch.find_all(id, client)
     end
 
     def find_batch(batch_id)
-      client.find_one(ArtemisApi::Batch.json_type, batch_id, facility_id: id)
+      ArtemisApi::Batch.find(batch_id, id, client)
     end
   end
 end
