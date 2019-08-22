@@ -32,22 +32,15 @@ Once you have all this info, the first step to actually using this gem is to ins
 options = {app_id: 'your_artemis_application_id',
            app_secret: 'your_artemis_secret_id',
            base_uri: 'https://portal.artemisag.com'}
-<<<<<<< HEAD
-client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', 7200, Time.zone.now, options)
-=======
+
 client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', token_expires_at, options)
->>>>>>> master
 ```
 
 Alternatively, instead of passing in options, you can set those values as ENV variables called `ENV['ARTEMIS_OAUTH_APP_ID']`, `ENV['ARTEMIS_OAUTH_APP_SECRET']` and `ENV['ARTEMIS_BASE_URI']`
 
 They will be automatically detected and then you don't have to pass in any options:
 ```ruby
-<<<<<<< HEAD
-client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', 7200, Time.zone.now)
-=======
 client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', token_expires_at)
->>>>>>> master
 ```
 
 Once you have a client instance, you can use it to request information from Artemis.
@@ -57,15 +50,76 @@ To get user information about the Artemis User that is associated with your appl
 ArtemisApi::User.get_current(client)
 ```
 
-To get a list of all Artemis Facilities that you have access to:
+To get a list of all Artemis Organizations or Facilities that you have access to:
 ```ruby
+ArtemisApi::Organization.find_all(client)
 ArtemisApi::Facility.find_all(client)
 ```
 
-To get facility information about a single Artemis Facility that you have access to, by its Artemis ID:
+To get facility information about a single Artemis Organization or Facility that you have access to, by its Artemis ID:
 ```ruby
+ArtemisApi::Organization.find(1, client)
 ArtemisApi::Facility.find(2, client)
 ```
+
+Other models are scoped by facility, so you have to include the Facility id in the call. (You can also get information about other Artemis Users besides your own account this way.)
+
+To get all Users associated with the Facility with an ID of 2:
+```ruby
+ArtemisApi::User.find_all(2, client)
+```
+
+To get a single User, with id 12, which must also be associated with Facility 2:
+```ruby
+ArtemisApi::User.find(12, 2, client)
+```
+
+You can get info about Batches, Zones and Completions in a similar manner:
+```ruby
+ArtemisApi::Batch.find_all(2, client)
+ArtemisApi::Batch.find(22, 2, client)
+
+ArtemisApi::Zone.find_all(2, client)
+ArtemisApi::Zone.find(4, 2, client)
+
+ArtemisApi::Completion.find_all(2, client)
+ArtemisApi::Completion.find(30, 2, client)
+```
+
+If you have a Facility object, you can also get zones and batches that are associated with it. And if you have a Batch object, you can get all the Completions that are associated with it:
+```ruby
+facility = ArtemisApi::Facility.find(2, client)
+
+facility.zones
+facility.find_zone(4)
+
+facility.batches
+batch = facility.find_batch(22)
+
+batch.completions
+```
+
+Once you have queried info about a certain object, it will be stored in a hash called `objects` that exists on your active `client` object. Then, if you have to query the same object again, it can be pulled from that hash instead of doing another actual call to the API, to speed up performance. If you need to actually hit the API again for the most updated information, you can force the query like this:
+```ruby
+facility = ArtemisApi::Facility.find(2, client, force: true)
+```
+
+Additionally, you can optionally include other models in your call that have a relationship with the model you're querying. They will then be included in the payload and added into the objects hash for your `client` for easier querying in the future.
+
+```ruby
+ArtemisApi::Facility.find(2, client, include: "users")
+ArtemisApi::Batch.find(22, 2, client, include: "completions")
+```
+
+We also support filtering on the Batch and Completion models. It is another optional param and it expects a hash. Here's what that should look like.
+
+```ruby
+ArtemisApi::Batch.find_all(facility_id, client, filters: {view: 'all_batches', search: 'genovese basil'})
+ArtemisApi::Batch.find_all(facility_id, client, filters: {ids: [2, 4, 6, 11]})
+ArtemisApi::Completion.find_all(facility_id, client, filters: {crop_batch_ids: [5]})
+```
+
+Note that when you filter by ids or crop_batch_ids, you must pass in an array even if it only has one element.
 
 ## Development
 
