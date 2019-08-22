@@ -34,4 +34,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "oauth2"
   spec.add_development_dependency "webmock"
+  spec.add_development_dependency "activesupport"
 end
