@@ -17,6 +17,32 @@ class BatchDiscardsTest < Minitest::Test
           },
           relationships: {
             crop_batch: {
+              meta: {
+                included: false
+              }
+            },
+            completion: {
+              meta: {
+                included: false
+              }
+            }
+          }
+        }
+      }.to_json)
+
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/2/batch_discards/2?include=crop_batch")
+      .to_return(body: {
+        data: {
+          id: '2',
+          type: 'batch_discards',
+          attributes: {
+            id: 2,
+            quantity: 20,
+            reason_type: 'disease',
+            reason_description: ''
+          },
+          relationships: {
+            crop_batch: {
               data: {
                 id: '156',
                 type: 'crop_batches'
@@ -36,5 +62,15 @@ class BatchDiscardsTest < Minitest::Test
     batch = ArtemisApi::BatchDiscards.find(2, 2, @client)
     assert_equal 20, batch.quantity
     assert_equal 'disease', batch.reason_type
+    assert_equal false, batch.relationships['crop_batch']['meta']['included']
+    assert batch.relationships['crop_batch']['data'].nil?
+  end
+
+  def test_finding_a_specific_batch_discard_with_crop_batch_included
+    batch = ArtemisApi::BatchDiscards.find(2, 2, @client, include: "crop_batch")
+    assert_equal 20, batch.quantity
+    assert_equal 'disease', batch.reason_type
+    assert_equal '156', batch.relationships['crop_batch']['data']['id']
+    assert batch.relationships['crop_batch']['meta'].nil?
   end
 end
