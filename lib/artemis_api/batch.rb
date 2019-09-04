@@ -17,5 +17,9 @@ module ArtemisApi
     def discards
       ArtemisApi::Discard.find_all(facility_id, client, filters: {crop_batch_ids: [id]})
     end
+
+    def harvests
+      ArtemisApi::Harvest.find_all(facility_id, client, filters: {crop_batch_ids: [id]})
+    end
   end
 end
