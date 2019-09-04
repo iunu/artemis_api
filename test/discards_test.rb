@@ -59,7 +59,7 @@ class DiscardsTest < Minitest::Test
   end
 
   def test_finding_a_specific_discard
-    batch = ArtemisApi::Discards.find(2, 2, @client)
+    batch = ArtemisApi::Discard.find(2, 2, @client)
     assert_equal 20, batch.quantity
     assert_equal 'disease', batch.reason_type
     assert_equal false, batch.relationships['crop_batch']['meta']['included']
@@ -67,7 +67,7 @@ class DiscardsTest < Minitest::Test
   end
 
   def test_finding_a_specific_discard_with_crop_batch_included
-    batch = ArtemisApi::Discards.find(2, 2, @client, include: "crop_batch")
+    batch = ArtemisApi::Discard.find(2, 2, @client, include: "crop_batch")
     assert_equal 20, batch.quantity
     assert_equal 'disease', batch.reason_type
     assert_equal '156', batch.relationships['crop_batch']['data']['id']

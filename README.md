@@ -74,7 +74,7 @@ To get a single User, with id 12, which must also be associated with Facility 2:
 ArtemisApi::User.find(12, 2, client)
 ```
 
-You can get info about Batches, Zones and Completions in a similar manner:
+You can get info about Batches, Zones, Completions and Discards in a similar manner:
 ```ruby
 ArtemisApi::Batch.find_all(2, client)
 ArtemisApi::Batch.find(22, 2, client)
@@ -84,6 +84,9 @@ ArtemisApi::Zone.find(4, 2, client)
 
 ArtemisApi::Completion.find_all(2, client)
 ArtemisApi::Completion.find(30, 2, client)
+
+ArtemisApi::Discard.find_all(2, client)
+ArtemisApi::Discard.find(37, 2, client)
 ```
 
 If you have a Facility object, you can also get zones and batches that are associated with it. And if you have a Batch object, you can get all the Completions that are associated with it:
