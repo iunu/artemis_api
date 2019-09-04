@@ -1,5 +1,5 @@
 module ArtemisApi
-  class Discards < ArtemisApi::Model
+  class Discard < ArtemisApi::Model
     json_type 'discards'
 
     def self.find(id, facility_id, client, include: nil, force: false)
