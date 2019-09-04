@@ -3,7 +3,6 @@ require "test_helper"
 class DiscardTest < Minitest::Test
   def setup
     get_client
-    get_facility
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/2/discards/2")
       .to_return(body: {
@@ -60,7 +59,7 @@ class DiscardTest < Minitest::Test
   end
 
   def test_finding_a_specific_discard
-    discard = ArtemisApi::Discard.find(2, @facility.id, @client)
+    discard = ArtemisApi::Discard.find(2, 2, @client)
     assert_equal 20, discard.quantity
     assert_equal 'disease', discard.reason_type
     assert_equal false, discard.relationships['batch']['meta']['included']
@@ -68,7 +67,7 @@ class DiscardTest < Minitest::Test
   end
 
   def test_finding_a_specific_discard_with_batch_included
-    discard = ArtemisApi::Discard.find(2, @facility.id, @client, include: 'batch')
+    discard = ArtemisApi::Discard.find(2, 2, @client, include: 'batch')
     assert_equal 20, discard.quantity
     assert_equal 'disease', discard.reason_type
     assert_equal '156', discard.relationships['batch']['data']['id']
