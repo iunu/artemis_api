@@ -1,6 +1,6 @@
 require "test_helper"
 
-class DiscardsTest < Minitest::Test
+class DiscardTest < Minitest::Test
   def setup
     get_client
     get_facility
