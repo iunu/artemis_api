@@ -9,8 +9,8 @@ require 'artemis_api/batch'
 require 'artemis_api/completion'
 require 'artemis_api/discard'
 require 'artemis_api/harvest'
-require 'artemis_api/seeding_units'
-require 'artemis_api/harvest_units'
+require 'artemis_api/seeding_unit'
+require 'artemis_api/harvest_unit'
 
 module ArtemisApi
   # Your code goes here...

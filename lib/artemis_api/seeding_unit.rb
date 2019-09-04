@@ -7,7 +7,7 @@ module ArtemisApi
     end
 
     def self.find_all(facility_id, client, include: nil)
-      client.find_all(self.json_type, facility_id: facility_id, include: include, filters: filters)
+      client.find_all(self.json_type, facility_id: facility_id, include: include)
     end
   end
 end
