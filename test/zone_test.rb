@@ -3,10 +3,7 @@ require "test_helper"
 class ZoneTest < Minitest::Test
   def setup
     get_client
-
-    stub_request(:get, 'http://localhost:3000/api/v3/facilities/2')
-      .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}}.to_json)
-    @facility = ArtemisApi::Facility.find(2, @client)
+    get_facility
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/zones")
       .to_return(body: {data: [{id: '1', type: 'zones', attributes: {id: 1, name: 'Germination'}}, {id: '2', type: 'zones', attributes: {id: 2, name: 'Propagation'}}]}.to_json)
