@@ -3,10 +3,7 @@ require "test_helper"
 class CompletionTest < Minitest::Test
   def setup
     get_client
-
-    stub_request(:get, 'http://localhost:3000/api/v3/facilities/2')
-      .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}}.to_json)
-    @facility = ArtemisApi::Facility.find(2, @client)
+    get_facility
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/completions")
       .to_return(body: {data: [{id: '1', type: 'completions', attributes: {id: 1, action_type: 'start'}}, {id: '2', type: 'completions', attributes: {id: 2, action_type: 'move'}}]}.to_json)

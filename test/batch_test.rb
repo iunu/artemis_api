@@ -3,10 +3,7 @@ require "test_helper"
 class BatchTest < Minitest::Test
   def setup
     get_client
-  
-    stub_request(:get, 'http://localhost:3000/api/v3/facilities/2')
-      .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}}.to_json)
-    @facility = ArtemisApi::Facility.find(2, @client)
+    get_facility
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/batches")
       .to_return(body: {data: [{id: '1', type: 'batches', attributes: {id: 1, arbitrary_id: 'Jun16-Gem-Let'}}, {id: '2', type: 'batches', attributes: {id: 2, name: 'Jun19-Bok-Cho'}}]}.to_json)
