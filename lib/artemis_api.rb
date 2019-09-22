@@ -8,6 +8,7 @@ require "artemis_api/organization"
 require "artemis_api/batch"
 require "artemis_api/completion"
 require "artemis_api/discards"
+require "artemis_api/items"
 
 module ArtemisApi
   # Your code goes here...

@@ -40,11 +40,13 @@ module ArtemisApi
       obj
     end
 
-    def find_all(type, facility_id: nil, include: nil, filters: nil)
+    def find_all(type, facility_id: nil, batch_id: nil, include: nil, filters: nil)
       records = []
       refresh if @oauth_token.expired?
 
-      url = if facility_id
+      url = if facility_id && batch_id
+              "#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/#{type}"
+            elsif facility_id && !batch_id
               "#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/#{type}"
             else
               "#{@options[:base_uri]}/api/v3/#{type}"
