@@ -46,7 +46,7 @@ module ArtemisApi
 
       url = if facility_id && batch_id
               "#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/#{type}"
-            elsif facility_id && !batch_id
+            elsif facility_id && batch_id.nil?
               "#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/#{type}"
             else
               "#{@options[:base_uri]}/api/v3/#{type}"
