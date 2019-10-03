@@ -84,11 +84,19 @@ ArtemisApi::Zone.find(4, 2, client)
 
 ArtemisApi::Completion.find_all(2, client)
 ArtemisApi::Completion.find(30, 2, client)
+
+ArtemisApi::SeedingUnit.find_all(2, client)
+ArtemisApi::SeedingUnit.find(17, 2, client)
+```
+
+Additionally, Items are scoped by both Facility and Batch, and they also have an optional seeding_unit_id param. To get all Items, you must pass in both the Facility and Batch id:
+```ruby
+ArtemisApi::Item.find_all(2, 22, client, seeding_unit_id: 17)
 ```
 
 If you have a Facility object, you can also get zones and batches that are associated with it.
 
-And if you have a Batch object, you can get all the Completions, Harvests and Discards that are associated with it:
+And if you have a Batch object, you can get all the Completions, Items, Harvests and Discards that are associated with it. (Items can still accept an optional seeding_unit_id.)
 ```ruby
 facility = ArtemisApi::Facility.find(2, client)
 
@@ -101,6 +109,7 @@ batch = facility.find_batch(22)
 batch.completions
 batch.harvests
 batch.discards
+batch.items(seeding_unit_id: 17)
 ```
 
 Once you have queried info about a certain object, it will be stored in a hash called `objects` that exists on your active `client` object. Then, if you have to query the same object again, it can be pulled from that hash instead of doing another actual call to the API, to speed up performance. If you need to actually hit the API again for the most updated information, you can force the query like this:
