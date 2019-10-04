@@ -23,7 +23,7 @@ module ArtemisApi
     end
 
     def items(seeding_unit_id: nil)
-      ArtemisApi::Item.find_all(facility_id, id, client, seeding_unit_id: seeding_unit_id)
+      ArtemisApi::Item.find_all(facility_id, id, client, filters: {seeding_unit_id: seeding_unit_id})
     end
   end
 end
