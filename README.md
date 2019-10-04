@@ -89,14 +89,14 @@ ArtemisApi::SeedingUnit.find_all(2, client)
 ArtemisApi::SeedingUnit.find(17, 2, client)
 ```
 
-Additionally, Items are scoped by both Facility and Batch, and they also have an optional seeding_unit_id param. To get all Items, you must pass in both the Facility and Batch id:
+Additionally, Items are scoped by both Facility and Batch:
 ```ruby
-ArtemisApi::Item.find_all(2, 22, client, seeding_unit_id: 17)
+ArtemisApi::Item.find_all(2, 22, client)
 ```
 
 If you have a Facility object, you can also get zones and batches that are associated with it.
 
-And if you have a Batch object, you can get all the Completions, Items, Harvests and Discards that are associated with it. (Items can still accept an optional seeding_unit_id.)
+And if you have a Batch object, you can get all the Completions, Items, Harvests and Discards that are associated with it. (Items can also accept an optional seeding_unit_id param.)
 ```ruby
 facility = ArtemisApi::Facility.find(2, client)
 
