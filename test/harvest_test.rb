@@ -13,12 +13,12 @@ class HarvestTest < Minitest::Test
   end
 
   def test_finding_all_harvests
-    harvests = ArtemisApi::Harvest.find_all(@facility.id, @client)
+    harvests = ArtemisApi::Harvest.find_all(facility_id: @facility.id, client: @client)
     assert_equal 2, harvests.count
   end
 
   def test_finding_a_specific_harvest
-    harvest = ArtemisApi::Harvest.find(2, @facility.id, @client)
+    harvest = ArtemisApi::Harvest.find(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 'partial', harvest.harvest_type
     assert_equal 1, harvest.quantity
   end
