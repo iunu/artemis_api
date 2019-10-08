@@ -82,8 +82,8 @@ module ArtemisApi
       find_one('facilities', id, include: include, force: force)
     end
 
-    def batches(facility_id:, include: nil, filters: nil)
-      find_all(self.json_type, facility_id: facility_id, include: include, filters: filters)
+    def current_user(include: nil)
+      ArtemisApi::User.get_current(self, include: include)
     end
 
     private
