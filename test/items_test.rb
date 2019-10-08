@@ -6,11 +6,11 @@ class ItemsTest < Minitest::Test
 
     stub_request(:get, 'http://localhost:3000/api/v3/facilities/2')
       .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}}.to_json)
-    @facility = ArtemisApi::Facility.find(2, @client)
+    @facility = ArtemisApi::Facility.find(id: 2, client: @client)
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/batches/2")
       .to_return(body: {data: {id: '2', type: 'batches', attributes: {id: 2, arbitrary_id: 'Jun19-Bok-Cho'}, relationships: {seeding_unit: {data: {id: '3479', type: 'seeding_units'}}}}}.to_json)
-    @batch = ArtemisApi::Batch.find(2, @facility.id, @client)
+    @batch = ArtemisApi::Batch.find(id: 2, facility_id: @facility.id, client: @client)
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/batches/2/items")
       .to_return(body: {data: [{id: '326515', type: 'items', attributes: {id: 326515, status: 'active'}, relationships: {barcode: {data: {id: '1A4FF0200000022000000207', type: 'barcodes'}}}}]}.to_json)

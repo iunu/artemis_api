@@ -3,7 +3,7 @@ require "test_helper"
 class OrganizationTest < Minitest::Test
   def setup
     get_client
-    
+
     stub_request(:get, 'http://localhost:3000/api/v3/organizations')
       .to_return(body: {data: [{id: '1', type: 'organizations', attributes: {id: 1, name: 'Sky Fresh'}}, {id: '2', type: 'organizations', attributes: {id: 2, name: 'Rare Dankness'}}]}.to_json)
   end
@@ -32,7 +32,7 @@ class OrganizationTest < Minitest::Test
       .to_return(body: {data: {id: '2', type: 'organizations', attributes: {id: 2, name: 'Rare Dankness'}}, included: [{id: 1, type: "facilities", attributes: {id: 1, name: 'Sky Fresh'}}]}.to_json)
 
     org = ArtemisApi::Organization.find(2, @client, include: 'facilities')
-    facility = ArtemisApi::Facility.find(1, @client)
+    facility = ArtemisApi::Facility.find(id: 1, client: @client)
     assert_equal 'Rare Dankness', org.name
     assert_equal 'Sky Fresh', facility.name
   end

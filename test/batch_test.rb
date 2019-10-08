@@ -13,7 +13,7 @@ class BatchTest < Minitest::Test
   end
 
   def test_finding_all_batches
-    batches = ArtemisApi::Batch.find_all(@facility.id, @client)
+    batches = ArtemisApi::Batch.find_all(facility_id: @facility.id, client: @client)
     assert_equal 2, batches.count
   end
 
@@ -23,7 +23,7 @@ class BatchTest < Minitest::Test
   end
 
   def test_finding_a_specific_batch
-    batch = ArtemisApi::Batch.find(2, @facility.id, @client)
+    batch = ArtemisApi::Batch.find(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 'Jun19-Bok-Cho', batch.arbitrary_id
   end
 
@@ -40,7 +40,7 @@ class BatchTest < Minitest::Test
                           attributes: {id: 2, arbitrary_id: 'Jun19-Bok-Cho'}},
                         included: [{id: '1', type: 'zones', attributes: {id: 1, name: 'Germination'}}]}.to_json)
 
-    batch = ArtemisApi::Batch.find(2, @facility.id, @client, include: "zone")
+    batch = ArtemisApi::Batch.find(id: 2, facility_id: @facility.id, client: @client, include: "zone")
     assert_equal 'Jun19-Bok-Cho', batch.arbitrary_id
     assert_equal @client.objects['zones'].count, 1
 

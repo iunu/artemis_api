@@ -74,6 +74,18 @@ module ArtemisApi
       @oauth_token = @oauth_token.refresh!
     end
 
+    def facilities(include: nil)
+      find_all('facilities', include: include)
+    end
+
+    def facility(id, include: nil, force: false)
+      find_one('facilities', id, include: include, force: force)
+    end
+
+    def batches(facility_id:, include: nil, filters: nil)
+      find_all(self.json_type, facility_id: facility_id, include: include, filters: filters)
+    end
+
     private
 
     def process_response(response, type)

@@ -17,5 +17,5 @@ end
 def get_facility
   stub_request(:get, 'http://localhost:3000/api/v3/facilities/2')
     .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}}.to_json)
-  @facility = ArtemisApi::Facility.find(2, @client)
+  @facility = ArtemisApi::Facility.find(id: 2, client: @client)
 end
