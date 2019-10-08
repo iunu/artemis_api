@@ -82,6 +82,14 @@ module ArtemisApi
       find_one('facilities', id, include: include, force: force)
     end
 
+    def organizations(include: nil)
+      find_all('organizations', include: include)
+    end
+
+    def organization(id, include: nil, force: false)
+      find_one('organizations', id, include: include, force: force)
+    end
+
     def current_user(include: nil)
       ArtemisApi::User.get_current(self, include: include)
     end

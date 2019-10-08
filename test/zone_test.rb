@@ -28,7 +28,7 @@ class ZoneTest < Minitest::Test
   end
 
   def test_finding_a_specific_zone_through_facility
-    zone = @facility.find_zone(2)
+    zone = @facility.zone(2)
     assert_equal 'Propagation', zone.name
   end
 end

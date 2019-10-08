@@ -14,7 +14,7 @@ module ArtemisApi
       ArtemisApi::Zone.find_all(facility_id: id, client: client)
     end
 
-    def find_zone(zone_id)
+    def zone(zone_id)
       ArtemisApi::Zone.find(id: zone_id, facility_id: id, client: client)
     end
 
@@ -22,7 +22,7 @@ module ArtemisApi
       ArtemisApi::Batch.find_all(facility_id: id, client: client)
     end
 
-    def find_batch(batch_id)
+    def batch(batch_id)
       ArtemisApi::Batch.find(id: batch_id, facility_id: id, client: client)
     end
 
@@ -30,8 +30,24 @@ module ArtemisApi
       ArtemisApi::User.find_all(facility_id: id, client: client)
     end
 
-    def find_user(user_id)
+    def user(user_id)
       ArtemisApi::User.find(id: user_id, facility_id: id, client: client)
+    end
+
+    def seeding_units
+      ArtemisApi::SeedingUnit.find_all(facility_id: id, client: client)
+    end
+
+    def seeding_unit(unit_id)
+      ArtemisApi::SeedingUnit.find(id: unit_id, facility_id: id, client: client)
+    end
+
+    def harvest_units
+      ArtemisApi::HarvestUnit.find_all(facility_id: id, client: client)
+    end
+
+    def harvest_unit(unit_id)
+      ArtemisApi::HarvestUnit.find(id: unit_id, facility_id: id, client: client)
     end
   end
 end

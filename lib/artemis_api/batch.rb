@@ -14,12 +14,24 @@ module ArtemisApi
       ArtemisApi::Completion.find_all(facility_id: facility_id, client: client, filters: {crop_batch_ids: [id]})
     end
 
+    def completion(completion_id)
+      ArtemisApi::Completion.find(id: completion_id, facility_id: facility_id, client: client)
+    end
+
     def discards
       ArtemisApi::Discard.find_all(facility_id: facility_id, client: client, filters: {crop_batch_ids: [id]})
     end
 
+    def discard(discard_id)
+      ArtemisApi::Discard.find(id: discard_id, facility_id: facility_id, client: client)
+    end
+
     def harvests
       ArtemisApi::Harvest.find_all(facility_id: facility_id, client: client, filters: {crop_batch_ids: [id]})
+    end
+
+    def harvest(harvest_id)
+      ArtemisApi::Harvest.find(id: harvest_id, facility_id: facility_id, client: client)
     end
 
     def items(seeding_unit_id: nil)

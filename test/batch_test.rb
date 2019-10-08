@@ -28,7 +28,7 @@ class BatchTest < Minitest::Test
   end
 
   def test_finding_a_specific_batch_through_facility
-    batch = @facility.find_batch(2)
+    batch = @facility.batch(2)
     assert_equal 'Jun19-Bok-Cho', batch.arbitrary_id
   end
 

@@ -40,7 +40,7 @@ class UserTest < Minitest::Test
   end
 
   def test_finding_a_specific_user_through_facility
-    user = @facility.find_user(42)
+    user = @facility.user(42)
     assert_equal user.full_name, 'Developer'
     assert_equal user.email, 'developer@artemisag.com'
   end
