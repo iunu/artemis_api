@@ -11,11 +11,11 @@ module ArtemisApi
     end
 
     def zones
-      ArtemisApi::Zone.find_all(id, client)
+      ArtemisApi::Zone.find_all(facility_id: id, client: client)
     end
 
     def find_zone(zone_id)
-      ArtemisApi::Zone.find(zone_id, id, client)
+      ArtemisApi::Zone.find(id: zone_id, facility_id: id, client: client)
     end
 
     def batches

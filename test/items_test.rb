@@ -20,7 +20,7 @@ class ItemsTest < Minitest::Test
   end
 
   def test_finding_all_items_of_facility_and_batch
-    items = ArtemisApi::Items.find_all(@facility.id, @batch.id, @client)
+    items = ArtemisApi::Items.find_all(facility_id: @facility.id, batch_id: @batch.id, client: @client)
     assert_equal 1, items.count
     assert_equal 326_515, items.first.id
     assert_equal '1A4FF0200000022000000207', items.first.relationships.dig('barcode', 'data', 'id')
@@ -28,7 +28,10 @@ class ItemsTest < Minitest::Test
 
   def test_finding_all_items_with_seeding_unit
     seeding_unit_id = 100
-    items = ArtemisApi::Items.find_all(@facility.id, @batch.id, @client, filters: {seeding_unit_id: seeding_unit_id})
+    items = ArtemisApi::Items.find_all(facility_id: @facility.id,
+                                       batch_id: @batch.id,
+                                       client: @client,
+                                       filters: {seeding_unit_id: seeding_unit_id})
     assert_equal 1, items.count
     assert_equal seeding_unit_id.to_s, items.first.relationships.dig('seeding_unit', 'data', 'id')
   end

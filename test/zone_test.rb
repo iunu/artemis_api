@@ -13,7 +13,7 @@ class ZoneTest < Minitest::Test
   end
 
   def test_finding_all_zones
-    zones = ArtemisApi::Zone.find_all(@facility.id, @client)
+    zones = ArtemisApi::Zone.find_all(facility_id: @facility.id, client: @client)
     assert_equal 2, zones.count
   end
 
@@ -23,7 +23,7 @@ class ZoneTest < Minitest::Test
   end
 
   def test_finding_a_specific_zone
-    zone = ArtemisApi::Zone.find(2, @facility.id, @client)
+    zone = ArtemisApi::Zone.find(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 'Propagation', zone.name
   end
 

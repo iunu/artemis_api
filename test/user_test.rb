@@ -5,13 +5,13 @@ class UserTest < Minitest::Test
     get_client
     get_facility
 
-    stub_request(:get, 'http://localhost:3000/api/v3/user')
+    stub_request(:get, "http://localhost:3000/api/v3/user")
       .to_return(body: {data: {id: '41', type: 'users', attributes: {id: 41, full_name: 'Jamey Hampton', email: 'jhampton@artemisag.com'}}}.to_json)
 
-    stub_request(:get, 'http://localhost:3000/api/v3/facilities/2/users')
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/users")
       .to_return(body: {data: [{id: '41', type: 'users', attributes: {id: 41, full_name: 'Jamey Hampton', email: 'jhampton@artemisag.com'}}, {id: '42', type: 'users', attributes: {id: 42, full_name: 'Developer', email: 'developer@artemisag.com'}}]}.to_json)
 
-    stub_request(:get, 'http://localhost:3000/api/v3/facilities/2/users/42')
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/users/42")
       .to_return(body: {data: {id: '42', type: 'users', attributes: {id: 42, full_name: 'Developer', email: 'developer@artemisag.com'}}}.to_json)
   end
 
@@ -23,7 +23,7 @@ class UserTest < Minitest::Test
   end
 
   def test_finding_all_users
-    users = ArtemisApi::User.find_all(facility_id: 2, client: @client)
+    users = ArtemisApi::User.find_all(facility_id: @facility.id, client: @client)
     assert_equal 2, users.count
     assert_equal 2, @client.objects['users'].count
   end
@@ -34,7 +34,7 @@ class UserTest < Minitest::Test
   end
 
   def test_finding_a_specific_user
-    user = ArtemisApi::User.find(id: 42, facility_id: 2, client: @client)
+    user = ArtemisApi::User.find(id: 42, facility_id: @facility.id, client: @client)
     assert_equal user.full_name, 'Developer'
     assert_equal user.email, 'developer@artemisag.com'
   end
@@ -53,7 +53,7 @@ class UserTest < Minitest::Test
                           attributes: {id: 42, full_name: 'Developer', email: 'developer@artemisag.com'}},
                         included: [{id: '1', type: 'organizations', attributes: {id: 1, name: 'Vegetable Sky'}}]}.to_json)
 
-    user = ArtemisApi::User.find(id: 42, facility_id: 2, client: @client, include: "organizations")
+    user = ArtemisApi::User.find(id: 42, facility_id: @facility.id, client: @client, include: "organizations")
     assert_equal user.full_name, 'Developer'
     assert_equal user.email, 'developer@artemisag.com'
     assert_equal @client.objects['organizations'].count, 1

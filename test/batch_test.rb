@@ -44,7 +44,7 @@ class BatchTest < Minitest::Test
     assert_equal 'Jun19-Bok-Cho', batch.arbitrary_id
     assert_equal @client.objects['zones'].count, 1
 
-    zone = ArtemisApi::Zone.find(1, 2, @client)
+    zone = ArtemisApi::Zone.find(id: 1, facility_id: @facility.id, client: @client)
     assert_equal zone.name, 'Germination'
   end
 end
