@@ -25,5 +25,13 @@ module ArtemisApi
     def find_batch(batch_id)
       ArtemisApi::Batch.find(id: batch_id, facility_id: id, client: client)
     end
+
+    def users
+      ArtemisApi::User.find_all(facility_id: id, client: client)
+    end
+
+    def find_user(user_id)
+      ArtemisApi::User.find(id: user_id, facility_id: id, client: client)
+    end
   end
 end
