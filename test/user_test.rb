@@ -48,7 +48,7 @@ class UserTest < Minitest::Test
 
     # Since the organization has already been included and stored in the client objects array,
     # this call doesn't actually hit the API and consdoesn't need to be stubbed.
-    organization = ArtemisApi::Organization.find(1, @client)
+    organization = ArtemisApi::Organization.find(id: 1, client: @client)
     assert_equal organization.name, 'Vegetable Sky'
   end
 end

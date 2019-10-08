@@ -13,12 +13,12 @@ class SeedingUnitTest < Minitest::Test
   end
 
   def test_finding_all_seeding_units
-    seeding_units = ArtemisApi::SeedingUnit.find_all(@facility.id, @client)
+    seeding_units = ArtemisApi::SeedingUnit.find_all(facility_id: @facility.id, client: @client)
     assert_equal 2, seeding_units.count
   end
 
   def test_finding_a_specific_seeding_unit
-    seeding_unit = ArtemisApi::SeedingUnit.find(2, @facility.id, @client)
+    seeding_unit = ArtemisApi::SeedingUnit.find(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 'raft', seeding_unit.name
   end
 end
