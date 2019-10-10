@@ -10,32 +10,54 @@ module ArtemisApi
       client.find_all(self.json_type, facility_id: facility_id, include: include, filters: filters)
     end
 
-    def completions
-      ArtemisApi::Completion.find_all(facility_id: facility_id, client: client, filters: {crop_batch_ids: [id]})
+    def completions(include: nil)
+      ArtemisApi::Completion.find_all(facility_id: facility_id,
+                                      client: client,
+                                      include: include,
+                                      filters: {crop_batch_ids: [id]})
     end
 
-    def completion(completion_id)
-      ArtemisApi::Completion.find(id: completion_id, facility_id: facility_id, client: client)
+    def completion(completion_id, include: nil)
+      ArtemisApi::Completion.find(id: completion_id,
+                                  facility_id: facility_id,
+                                  client: client,
+                                  include: include)
     end
 
-    def discards
-      ArtemisApi::Discard.find_all(facility_id: facility_id, client: client, filters: {crop_batch_ids: [id]})
+    def discards(include: nil)
+      ArtemisApi::Discard.find_all(facility_id: facility_id,
+                                   client: client,
+                                   include: include,
+                                   filters: {crop_batch_ids: [id]})
     end
 
-    def discard(discard_id)
-      ArtemisApi::Discard.find(id: discard_id, facility_id: facility_id, client: client)
+    def discard(discard_id, include: nil)
+      ArtemisApi::Discard.find(id: discard_id,
+                               facility_id: facility_id,
+                               client: client,
+                               include: include)
     end
 
-    def harvests
-      ArtemisApi::Harvest.find_all(facility_id: facility_id, client: client, filters: {crop_batch_ids: [id]})
+    def harvests(include: nil)
+      ArtemisApi::Harvest.find_all(facility_id: facility_id,
+                                   client: client,
+                                   include: include,
+                                   filters: {crop_batch_ids: [id]})
     end
 
-    def harvest(harvest_id)
-      ArtemisApi::Harvest.find(id: harvest_id, facility_id: facility_id, client: client)
+    def harvest(harvest_id, include: nil)
+      ArtemisApi::Harvest.find(id: harvest_id,
+                               facility_id: facility_id,
+                               client: client,
+                               include: include)
     end
 
-    def items(seeding_unit_id: nil)
-      ArtemisApi::Item.find_all(facility_id: facility_id, batch_id: id, client: client, filters: {seeding_unit_id: seeding_unit_id})
+    def items(seeding_unit_id: nil, include: nil)
+      ArtemisApi::Item.find_all(facility_id: facility_id,
+                                batch_id: id,
+                                client: client,
+                                include: include,
+                                filters: {seeding_unit_id: seeding_unit_id})
     end
   end
 end

@@ -10,44 +10,44 @@ module ArtemisApi
       client.find_all(self.json_type, include: include)
     end
 
-    def zones
-      ArtemisApi::Zone.find_all(facility_id: id, client: client)
+    def zones(include: nil)
+      ArtemisApi::Zone.find_all(facility_id: id, client: client, include: include)
     end
 
-    def zone(zone_id)
-      ArtemisApi::Zone.find(id: zone_id, facility_id: id, client: client)
+    def zone(zone_id, include: nil)
+      ArtemisApi::Zone.find(id: zone_id, facility_id: id, client: client, include: include)
     end
 
-    def batches
-      ArtemisApi::Batch.find_all(facility_id: id, client: client)
+    def batches(include: nil)
+      ArtemisApi::Batch.find_all(facility_id: id, client: client, include: include)
     end
 
-    def batch(batch_id)
-      ArtemisApi::Batch.find(id: batch_id, facility_id: id, client: client)
+    def batch(batch_id, include: nil)
+      ArtemisApi::Batch.find(id: batch_id, facility_id: id, client: client, include: include)
     end
 
-    def users
-      ArtemisApi::User.find_all(facility_id: id, client: client)
+    def users(include: nil)
+      ArtemisApi::User.find_all(facility_id: id, client: client, include: include)
     end
 
-    def user(user_id)
-      ArtemisApi::User.find(id: user_id, facility_id: id, client: client)
+    def user(user_id, include: nil)
+      ArtemisApi::User.find(id: user_id, facility_id: id, client: client, include: include)
     end
 
-    def seeding_units
-      ArtemisApi::SeedingUnit.find_all(facility_id: id, client: client)
+    def seeding_units(include: nil)
+      ArtemisApi::SeedingUnit.find_all(facility_id: id, client: client, include: include)
     end
 
-    def seeding_unit(unit_id)
-      ArtemisApi::SeedingUnit.find(id: unit_id, facility_id: id, client: client)
+    def seeding_unit(unit_id, include: nil)
+      ArtemisApi::SeedingUnit.find(id: unit_id, facility_id: id, client: client, include: include)
     end
 
-    def harvest_units
-      ArtemisApi::HarvestUnit.find_all(facility_id: id, client: client)
+    def harvest_units(include: nil)
+      ArtemisApi::HarvestUnit.find_all(facility_id: id, client: client, include: include)
     end
 
-    def harvest_unit(unit_id)
-      ArtemisApi::HarvestUnit.find(id: unit_id, facility_id: id, client: client)
+    def harvest_unit(unit_id, include: nil)
+      ArtemisApi::HarvestUnit.find(id: unit_id, facility_id: id, client: client, include: include)
     end
   end
 end
