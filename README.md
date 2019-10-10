@@ -33,14 +33,19 @@ options = {app_id: 'your_artemis_application_id',
            app_secret: 'your_artemis_secret_id',
            base_uri: 'https://portal.artemisag.com'}
 
-client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', token_expires_at, options)
+client = ArtemisApi::Client.new(access_token: 'your_access_token',
+                                refresh_token: 'your_refresh_token',
+                                expires_at: token_expires_at,
+                                options: options)
 ```
 
 Alternatively, instead of passing in options, you can set those values as ENV variables called `ENV['ARTEMIS_OAUTH_APP_ID']`, `ENV['ARTEMIS_OAUTH_APP_SECRET']` and `ENV['ARTEMIS_BASE_URI']`
 
 They will be automatically detected and then you don't have to pass in any options:
 ```ruby
-client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', token_expires_at)
+client = ArtemisApi::Client.new(access_token: 'your_access_token',
+                                refresh_token: 'your_refresh_token',
+                                expires_at: token_expires_at)
 ```
 
 Once you have a client instance, you can use it to request information from Artemis.

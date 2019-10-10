@@ -4,7 +4,7 @@ module ArtemisApi
     attr_reader :options, :objects, :access_token, :refresh_token, :oauth_client,
                 :oauth_token, :expires_at
 
-    def initialize(access_token, refresh_token, expires_at, options = {})
+    def initialize(access_token:, refresh_token:, expires_at:, options: {})
       options[:app_id] ||= ENV['ARTEMIS_OAUTH_APP_ID']
       options[:app_secret] ||= ENV['ARTEMIS_OAUTH_APP_SECRET']
       options[:base_uri] ||= ENV['ARTEMIS_BASE_URI']

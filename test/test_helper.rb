@@ -11,7 +11,10 @@ def get_client
              app_secret: '67890',
              base_uri: 'http://localhost:3000'}
   @expires_at = 1.days.from_now
-  @client = ArtemisApi::Client.new('ya29', 'eyJh', @expires_at, options)
+  @client = ArtemisApi::Client.new(access_token: 'ya29',
+                                   refresh_token: 'eyJh',
+                                   expires_at: @expires_at,
+                                   options: options)
 end
 
 def get_facility
