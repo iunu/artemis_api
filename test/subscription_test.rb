@@ -10,6 +10,10 @@ class SubscriptionTest < Minitest::Test
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/subscriptions/2")
       .to_return(body: {data: {id: '2', type: 'subscriptions', attributes: {id: 2, subject: 'batches', destination: 'http://localhost:8080/another/fake/url'}}}.to_json)
+
+    stub_request(:post, "http://localhost:3000/api/v3/facilities/#{@facility.id}/subscriptions")
+      .with(body: {"subscription"=>{"destination"=>"http://localhost:8080/a/fake/url", "subject"=>"completions"}})
+      .to_return(status: 200, body: {data: {id: '3', type: 'subscriptions', attributes: {id: 3, subject: 'completions', destination: 'http://localhost:8080/a/fake/url'}}}.to_json)
   end
 
   def test_finding_all_subscriptions
@@ -32,5 +36,11 @@ class SubscriptionTest < Minitest::Test
     subscription = @facility.find_subscription(2)
     assert_equal 'batches', subscription.subject
     assert_equal 'http://localhost:8080/another/fake/url', subscription.destination
+  end
+
+  def test_creating_a_new_subscription
+    subscription = ArtemisApi::Subscription.create(@facility.id, 'completions', 'http://localhost:8080/a/fake/url', @client)
+    assert_equal 'completions', subscription.subject
+    assert_equal 'http://localhost:8080/a/fake/url', subscription.destination
   end
 end

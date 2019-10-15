@@ -18,9 +18,7 @@ module ArtemisApi
 
       response = client.oauth_token.post(url, params)
 
-      # TODO: do we need to do something other than this?
-      # does the response include the created object? can we store it in the objects hash?
-      response.status == 200 ? true : false
+      response.status == 200 ? client.process_response(response, 'subscriptions') : false
     end
   end
 end
