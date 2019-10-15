@@ -39,7 +39,9 @@ class SubscriptionTest < Minitest::Test
   end
 
   def test_creating_a_new_subscription
-    subscription = ArtemisApi::Subscription.create(@facility.id, 'completions', 'http://localhost:8080/a/fake/url', @client)
+    assert_difference -> { @client.objects['subscription'].count }, +1 do
+      subscription = ArtemisApi::Subscription.create(@facility.id, 'completions', 'http://localhost:8080/a/fake/url', @client)
+    end
     assert_equal 'completions', subscription.subject
     assert_equal 'http://localhost:8080/a/fake/url', subscription.destination
   end
