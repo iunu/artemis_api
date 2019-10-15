@@ -2,6 +2,8 @@ module ArtemisApi
   class Batch < ArtemisApi::Model
     json_type 'batches'
     related_to_one :zone
+    related_to_one :seeding_unit
+    related_to_one :harvest_unit
 
     def self.find(id:, client:, facility_id:, include: nil, force: false)
       client.find_one(self.json_type, id, facility_id: facility_id, include: include, force: force)
