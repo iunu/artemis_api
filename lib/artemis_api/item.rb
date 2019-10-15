@@ -1,5 +1,5 @@
 module ArtemisApi
-  class Items < ArtemisApi::Model
+  class Item < ArtemisApi::Model
     json_type 'items'
 
     def self.find_all(facility_id:, batch_id:, client:, include: nil, filters: nil)
