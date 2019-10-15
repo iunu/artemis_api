@@ -15,9 +15,10 @@ class BatchTest < Minitest::Test
       .to_return(body: {data:
                          {id: '2',
                           type: 'batches',
-                          attributes: {id: 2, arbitrary_id: 'Jun19-Bok-Cho'}},
-                        included: [{id: '1', type: 'zones', attributes: {id: 1, name: 'Germination'}}],
-                        relationships: {zone: {data: {id: 1, type: 'zones'}}}}.to_json)
+                          attributes: {id: 2, arbitrary_id: 'Jun19-Bok-Cho'},
+                          relationships: {zone: {data: {id: 1, type: 'zones'}}}
+                        },
+                        included: [{id: '1', type: 'zones', attributes: {id: 1, name: 'Germination'}}]}.to_json)
   end
 
   def test_finding_all_batches
@@ -51,8 +52,6 @@ class BatchTest < Minitest::Test
 
   def test_related_to_one_zone
     batch = ArtemisApi::Batch.find(id: 2, facility_id: @facility.id, client: @client, include: "zone")
-    
-
     zone = batch.zone
     assert_equal zone.name, 'Germination'
   end
