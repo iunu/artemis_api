@@ -10,6 +10,14 @@ class BatchTest < Minitest::Test
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/batches/2")
       .to_return(body: {data: {id: '2', type: 'batches', attributes: {id: 2, arbitrary_id: 'Jun19-Bok-Cho'}}}.to_json)
+
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/batches/2?include=zone")
+      .to_return(body: {data:
+                         {id: '2',
+                          type: 'batches',
+                          attributes: {id: 2, arbitrary_id: 'Jun19-Bok-Cho'}},
+                        included: [{id: '1', type: 'zones', attributes: {id: 1, name: 'Germination'}}],
+                        relationships: {zone: {data: {id: 1, type: 'zones'}}}}.to_json)
   end
 
   def test_finding_all_batches
@@ -33,18 +41,19 @@ class BatchTest < Minitest::Test
   end
 
   def test_finding_a_batch_with_zone_included
-    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/batches/2?include=zone")
-      .to_return(body: {data:
-                         {id: '2',
-                          type: 'batches',
-                          attributes: {id: 2, arbitrary_id: 'Jun19-Bok-Cho'}},
-                        included: [{id: '1', type: 'zones', attributes: {id: 1, name: 'Germination'}}]}.to_json)
-
     batch = ArtemisApi::Batch.find(id: 2, facility_id: @facility.id, client: @client, include: "zone")
     assert_equal 'Jun19-Bok-Cho', batch.arbitrary_id
     assert_equal @client.objects['zones'].count, 1
 
     zone = ArtemisApi::Zone.find(id: 1, facility_id: @facility.id, client: @client)
+    assert_equal zone.name, 'Germination'
+  end
+
+  def test_related_to_one_zone
+    batch = ArtemisApi::Batch.find(id: 2, facility_id: @facility.id, client: @client, include: "zone")
+    
+
+    zone = batch.zone
     assert_equal zone.name, 'Germination'
   end
 end
