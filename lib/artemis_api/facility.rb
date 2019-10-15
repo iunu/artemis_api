@@ -25,5 +25,13 @@ module ArtemisApi
     def find_batch(batch_id)
       ArtemisApi::Batch.find(batch_id, id, client)
     end
+
+    def subscriptions
+      ArtemisApi::Subscription.find_all(id, client)
+    end
+
+    def find_subscription(subscription_id)
+      ArtemisApi::Subscription.find(subscription_id, id, client)
+    end
   end
 end
