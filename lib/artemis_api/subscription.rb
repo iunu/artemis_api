@@ -14,9 +14,7 @@ module ArtemisApi
       client.oauth_token.refresh! if client.oauth_token.expired?
 
       url = "#{client.options[:base_uri]}/api/v3/facilities/#{facility_id}/subscriptions"
-      params = { body:
-                  { subject: subject,
-                    destination: destination } }
+      params = { body: { subscription: { subject: subject, destination: destination } } }
 
       response = client.oauth_token.post(url, params)
 
