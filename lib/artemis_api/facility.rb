@@ -51,11 +51,11 @@ module ArtemisApi
     end
 
     def subscriptions
-      ArtemisApi::Subscription.find_all(id, client)
+      ArtemisApi::Subscription.find_all(facility_id: id, client: client)
     end
 
-    def find_subscription(subscription_id)
-      ArtemisApi::Subscription.find(subscription_id, id, client)
+    def subscription(subscription_id)
+      ArtemisApi::Subscription.find(id: subscription_id, facility_id: id, client: client)
     end
   end
 end

@@ -17,7 +17,7 @@ class SubscriptionTest < Minitest::Test
   end
 
   def test_finding_all_subscriptions
-    subscriptions = ArtemisApi::Subscription.find_all(@facility.id, @client)
+    subscriptions = ArtemisApi::Subscription.find_all(facility_id: @facility.id, client: @client)
     assert_equal 2, subscriptions.count
   end
 
@@ -27,19 +27,22 @@ class SubscriptionTest < Minitest::Test
   end
 
   def test_finding_a_specific_subscription
-    subscription = ArtemisApi::Subscription.find(2, @facility.id, @client)
+    subscription = ArtemisApi::Subscription.find(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 'batches', subscription.subject
     assert_equal 'http://localhost:8080/another/fake/url', subscription.destination
   end
 
   def test_finding_a_specific_subscription_through_facility
-    subscription = @facility.find_subscription(2)
+    subscription = @facility.subscription(2)
     assert_equal 'batches', subscription.subject
     assert_equal 'http://localhost:8080/another/fake/url', subscription.destination
   end
 
   def test_creating_a_new_subscription
-    subscription = ArtemisApi::Subscription.create(@facility.id, 'completions', 'http://localhost:8080/a/fake/url', @client)
+    subscription = ArtemisApi::Subscription.create(facility_id: @facility.id,
+                                                   subject: 'completions',
+                                                   destination: 'http://localhost:8080/a/fake/url',
+                                                   client: @client)
     assert_equal 'completions', subscription.subject
     assert_equal 'http://localhost:8080/a/fake/url', subscription.destination
     assert_equal 1, @client.objects['subscriptions'].count
