@@ -4,7 +4,7 @@ module ArtemisApi
     attr_reader :options, :objects, :access_token, :refresh_token, :oauth_client,
                 :oauth_token, :expires_at
 
-    def initialize(access_token, refresh_token, expires_at, options = {})
+    def initialize(access_token:, refresh_token:, expires_at:, options: {})
       options[:app_id] ||= ENV['ARTEMIS_OAUTH_APP_ID']
       options[:app_secret] ||= ENV['ARTEMIS_OAUTH_APP_SECRET']
       options[:base_uri] ||= ENV['ARTEMIS_BASE_URI']
@@ -72,6 +72,26 @@ module ArtemisApi
 
     def refresh
       @oauth_token = @oauth_token.refresh!
+    end
+
+    def facilities(include: nil)
+      find_all('facilities', include: include)
+    end
+
+    def facility(id, include: nil, force: false)
+      find_one('facilities', id, include: include, force: force)
+    end
+
+    def organizations(include: nil)
+      find_all('organizations', include: include)
+    end
+
+    def organization(id, include: nil, force: false)
+      find_one('organizations', id, include: include, force: force)
+    end
+
+    def current_user(include: nil)
+      ArtemisApi::User.get_current(self, include: include)
     end
 
     private

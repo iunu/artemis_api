@@ -63,7 +63,7 @@ class DiscardTest < Minitest::Test
   end
 
   def test_finding_a_specific_discard
-    discard = ArtemisApi::Discard.find(2, @facility.id, @client)
+    discard = ArtemisApi::Discard.find(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 20, discard.quantity
     assert_equal 'disease', discard.reason_type
     assert_equal false, discard.relationships['batch']['meta']['included']
@@ -71,7 +71,7 @@ class DiscardTest < Minitest::Test
   end
 
   def test_finding_a_specific_discard_with_batch_included
-    discard = ArtemisApi::Discard.find(2, @facility.id, @client, include: 'batch')
+    discard = ArtemisApi::Discard.find(id: 2, facility_id: @facility.id, client: @client, include: 'batch')
     assert_equal 20, discard.quantity
     assert_equal 'disease', discard.reason_type
     assert_equal '156', discard.relationships['batch']['data']['id']
@@ -79,7 +79,7 @@ class DiscardTest < Minitest::Test
   end
 
   def test_finding_all_discards
-    discards = ArtemisApi::Discard.find_all(@facility.id, @client)
+    discards = ArtemisApi::Discard.find_all(facility_id: @facility.id, client: @client)
     assert_equal 2, discards.count
   end
 end
