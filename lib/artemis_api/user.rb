@@ -3,7 +3,7 @@ module ArtemisApi
     json_type 'users'
     related_to_many :facilities
 
-    def self.get_current(client, include: nil)
+    def self.get_current(client:, include: nil)
       self.json_type
       client.refresh if client.oauth_token.expired?
       url = "#{client.options[:base_uri]}/api/v3/user"
@@ -16,11 +16,11 @@ module ArtemisApi
       obj
     end
 
-    def self.find(id, facility_id, client, include: nil, force: false)
+    def self.find(id:, facility_id:, client:, include: nil, force: false)
       client.find_one(self.json_type, id, facility_id: facility_id, include: include, force: force)
     end
 
-    def self.find_all(facility_id, client, include: nil)
+    def self.find_all(facility_id:, client:, include: nil)
       client.find_all(self.json_type, facility_id: facility_id, include: include)
     end
   end

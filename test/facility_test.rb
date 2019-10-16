@@ -9,7 +9,12 @@ class FacilityTest < Minitest::Test
   end
 
   def test_finding_all_facilities
-    facilities = ArtemisApi::Facility.find_all(@client)
+    facilities = ArtemisApi::Facility.find_all(client: @client)
+    assert_equal 2, facilities.count
+  end
+
+  def test_finding_all_facilities_through_client
+    facilities = @client.facilities
     assert_equal 2, facilities.count
   end
 
@@ -17,13 +22,21 @@ class FacilityTest < Minitest::Test
     stub_request(:get, 'http://localhost:3000/api/v3/facilities/2')
       .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}}.to_json)
 
-    facility = ArtemisApi::Facility.find(2, @client)
+    facility = ArtemisApi::Facility.find(id: 2, client: @client)
+    assert_equal 'Rare Dankness', facility.name
+  end
+
+  def test_finding_a_specific_facility_through_client
+    stub_request(:get, 'http://localhost:3000/api/v3/facilities/2')
+      .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}}.to_json)
+
+    facility = @client.facility(2)
     assert_equal 'Rare Dankness', facility.name
   end
 
   def test_finding_a_specific_facility_thats_already_in_memory
-    ArtemisApi::Facility.find_all(@client)
-    facility = ArtemisApi::Facility.find(2, @client)
+    ArtemisApi::Facility.find_all(client: @client)
+    facility = ArtemisApi::Facility.find(id: 2, client: @client)
     assert_equal 'Rare Dankness', facility.name
   end
 end
