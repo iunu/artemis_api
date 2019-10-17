@@ -7,7 +7,7 @@ This is a simple API wrapper for the [Artemis](https://artemisag.com/) API.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'artemis_api'
+gem 'artemis_api', :git => 'https://github.com/artemis-ag/artemis_api'
 ```
 
 And then execute:
