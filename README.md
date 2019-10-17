@@ -157,13 +157,15 @@ ArtemisApi::Item.find_all(facility_id: 2, batch_id: 22, client: client, filters:
 
 Note that when you filter by ids or crop_batch_ids, you must pass in an array even if it only has one element.
 
-The Artemis API is currently mainly read only, but we do support the creation of Subscriptions. These are used to set up webhooks that will make a callback to you whenever a Completion or Batch gets created or updated in the given facility. They require a `subject`, which can currently be either `completions` or `batches`, and a `destination`, which is the url that you want the callback to hit.
+The Artemis API is currently mainly read only, but we do support the creation of Subscriptions. These are used to set up webhooks that will make a callback to you whenever a Completion or Batch gets created or updated in the given facility. They require a `subject`, which can currently be either `completions` or `batches`, and a `destination`, which is the url that you want the callback to hit. There are two ways to make that call:
 
 ```ruby
 ArtemisApi::Subscription.create(facility_id: 2,
                                 subject: 'completions',
                                 destination: 'https://test-app-url.artemisag.io/v1/webhook',
                                 client: client)
+
+facility.create_subscription(subject: 'completions', destination: 'https://test-app-url.artemisag.io/v1/webhook')
 ```
 
 ## Development
