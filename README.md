@@ -96,7 +96,7 @@ client.facility(2).user(12)
 ArtemisApi::User.find(id: 12, facility_id: 2, client: client)
 ```
 
-You can get info about Batches, Zones, SeedingUnits and HarvestUnits in the same manner. Here are a couple examples, but the syntax is all the same.
+You can get info about Batches, Zones, SeedingUnits, HarvestUnits and Subscriptions in the same manner. Here are a couple examples, but the syntax is all the same.
 ```ruby
 client.facility(2).batches
 client.facility(2).batch(22)
@@ -156,6 +156,15 @@ ArtemisApi::Item.find_all(facility_id: 2, batch_id: 22, client: client, filters:
 ```
 
 Note that when you filter by ids or crop_batch_ids, you must pass in an array even if it only has one element.
+
+The Artemis API is currently mainly read only, but we do support the creation of Subscriptions. These are used to set up webhooks that will make a callback to you whenever a Completion or Batch gets created or updated in the given facility. They require a `subject`, which can currently be either `completions` or `batches`, and a `destination`, which is the url that you want the callback to hit.
+
+```ruby
+ArtemisApi::Subscription.create(facility_id: 2,
+                                subject: 'completions',
+                                destination: 'https://test-app-url.artemisag.io/v1/webhook',
+                                client: client)
+```
 
 ## Development
 
