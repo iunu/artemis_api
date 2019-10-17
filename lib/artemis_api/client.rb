@@ -91,7 +91,7 @@ module ArtemisApi
     end
 
     def current_user(include: nil)
-      ArtemisApi::User.get_current(self, include: include)
+      ArtemisApi::User.get_current(client: self, include: include)
     end
 
     private
