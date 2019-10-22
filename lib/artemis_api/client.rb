@@ -51,8 +51,12 @@ module ArtemisApi
             else
               "#{@options[:base_uri]}/api/v3/#{type}"
             end
+
       url = "#{url}?include=#{include}" if include
-      url = "#{url}?#{format_filters(filters)}" if filters
+      if filters
+        formatted_filters = format_filters(filters)
+        url = (include) ? "#{url}&#{formatted_filters}" : "#{url}?#{formatted_filters}"
+      end
 
       response = @oauth_token.get(url)
       if response.status == 200
