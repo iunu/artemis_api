@@ -5,6 +5,8 @@ require "minitest/autorun"
 require "webmock/minitest"
 require "active_support"
 require "active_support/core_ext/numeric"
+require 'active_support/testing/assertions'
+include ActiveSupport::Testing::Assertions
 
 def get_client
   options = {app_id: '12345',

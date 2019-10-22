@@ -49,5 +49,17 @@ module ArtemisApi
     def harvest_unit(unit_id, include: nil)
       ArtemisApi::HarvestUnit.find(id: unit_id, facility_id: id, client: client, include: include)
     end
+
+    def subscriptions
+      ArtemisApi::Subscription.find_all(facility_id: id, client: client)
+    end
+
+    def subscription(subscription_id)
+      ArtemisApi::Subscription.find(id: subscription_id, facility_id: id, client: client)
+    end
+
+    def create_subscription(subject:, destination:)
+      ArtemisApi::Subscription.create(facility_id: id, subject: subject, destination: destination, client: client)
+    end
   end
 end
