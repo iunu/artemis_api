@@ -74,6 +74,10 @@ module ArtemisApi
       @objects[type]&.[](id.to_i)
     end
 
+    def remove_record(type, id)
+      @objects[type].delete(id.to_i)
+    end
+
     def refresh
       @oauth_token = @oauth_token.refresh!
     end

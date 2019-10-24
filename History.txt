@@ -1,5 +1,9 @@
 # coding: UTF-8
 
+=== 0.2.0 / 2019-10-24
+
+* Added the ability to delete Subscriptions
+
 === 0.1.0 / 2019-10-03
 
 * Initial public release of the Artemis API wrapper
