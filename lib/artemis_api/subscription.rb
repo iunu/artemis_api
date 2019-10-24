@@ -20,5 +20,14 @@ module ArtemisApi
 
       response.status == 200 ? client.process_response(response, 'subscriptions') : false
     end
+
+    def self.delete(id:, facility_id:, client:)
+      client.oauth_token.refresh! if client.oauth_token.expired?
+
+      url = "#{client.options[:base_uri]}/api/v3/facilities/#{facility_id}/subscriptions/#{id}"
+
+      response = client.oauth_token.delete(url)
+      client.remove_record('subscriptions', id) if response.status == 204
+    end
   end
 end
