@@ -4,7 +4,7 @@ module ArtemisApi
     attr_reader :options, :objects, :access_token, :refresh_token, :oauth_client,
                 :oauth_token, :expires_at
 
-    def initialize(access_token, refresh_token, expires_at, options = {})
+    def initialize(access_token:, refresh_token:, expires_at:, options: {})
       options[:app_id] ||= ENV['ARTEMIS_OAUTH_APP_ID']
       options[:app_secret] ||= ENV['ARTEMIS_OAUTH_APP_SECRET']
       options[:base_uri] ||= ENV['ARTEMIS_BASE_URI']
@@ -51,8 +51,12 @@ module ArtemisApi
             else
               "#{@options[:base_uri]}/api/v3/#{type}"
             end
+
       url = "#{url}?include=#{include}" if include
-      url = "#{url}?#{format_filters(filters)}" if filters
+      if filters
+        formatted_filters = format_filters(filters)
+        url = (include) ? "#{url}&#{formatted_filters}" : "#{url}?#{formatted_filters}"
+      end
 
       response = @oauth_token.get(url)
       if response.status == 200
@@ -74,7 +78,25 @@ module ArtemisApi
       @oauth_token = @oauth_token.refresh!
     end
 
-    private
+    def facilities(include: nil)
+      find_all('facilities', include: include)
+    end
+
+    def facility(id, include: nil, force: false)
+      find_one('facilities', id, include: include, force: force)
+    end
+
+    def organizations(include: nil)
+      find_all('organizations', include: include)
+    end
+
+    def organization(id, include: nil, force: false)
+      find_one('organizations', id, include: include, force: force)
+    end
+
+    def current_user(include: nil)
+      ArtemisApi::User.get_current(client: self, include: include)
+    end
 
     def process_response(response, type)
       json = JSON.parse(response.body)
@@ -83,6 +105,8 @@ module ArtemisApi
 
       obj
     end
+
+    private
 
     def process_array(response, type, records)
       json = JSON.parse(response.body)

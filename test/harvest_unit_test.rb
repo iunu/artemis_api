@@ -13,12 +13,12 @@ class HarvestUnitTest < Minitest::Test
   end
 
   def test_finding_all_harvest_units
-    harvest_units = ArtemisApi::HarvestUnit.find_all(@facility.id, @client)
+    harvest_units = ArtemisApi::HarvestUnit.find_all(facility_id: @facility.id, client: @client)
     assert_equal 2, harvest_units.count
   end
 
   def test_finding_a_specific_harvest_unit
-    harvest_unit = ArtemisApi::HarvestUnit.find(2, @facility.id, @client)
+    harvest_unit = ArtemisApi::HarvestUnit.find(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 'kilogram', harvest_unit.name
     assert_equal 2.2, harvest_unit.weight
   end

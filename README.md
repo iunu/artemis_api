@@ -7,7 +7,7 @@ This is a simple API wrapper for the [Artemis](https://artemisag.com/) API.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'artemis_api'
+gem 'artemis_api', :git => 'https://github.com/artemis-ag/artemis_api'
 ```
 
 And then execute:
@@ -33,106 +33,140 @@ options = {app_id: 'your_artemis_application_id',
            app_secret: 'your_artemis_secret_id',
            base_uri: 'https://portal.artemisag.com'}
 
-client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', token_expires_at, options)
+client = ArtemisApi::Client.new(access_token: 'your_access_token',
+                                refresh_token: 'your_refresh_token',
+                                expires_at: token_expires_at,
+                                options: options)
 ```
 
 Alternatively, instead of passing in options, you can set those values as ENV variables called `ENV['ARTEMIS_OAUTH_APP_ID']`, `ENV['ARTEMIS_OAUTH_APP_SECRET']` and `ENV['ARTEMIS_BASE_URI']`
 
 They will be automatically detected and then you don't have to pass in any options:
 ```ruby
-client = ArtemisApi::Client.new('your_access_token', 'your_refresh_token', token_expires_at)
+client = ArtemisApi::Client.new(access_token: 'your_access_token',
+                                refresh_token: 'your_refresh_token',
+                                expires_at: token_expires_at)
 ```
 
 Once you have a client instance, you can use it to request information from Artemis.
 
 To get user information about the Artemis User that is associated with your application ID:
 ```ruby
-ArtemisApi::User.get_current(client)
+client.current_user
+```
+Or alternatively, you can make the call directly to the User class:
+
+```ruby
+ArtemisApi::User.get_current(client: client)
 ```
 
-To get a list of all Artemis Organizations or Facilities that you have access to:
+(Please note that we use named parameters in most of our function calls.)
+
+You can use either method to get a list of all Artemis Organizations or Facilities that you have access to:
 ```ruby
-ArtemisApi::Organization.find_all(client)
-ArtemisApi::Facility.find_all(client)
+client.organizations
+client.facilities
+
+ArtemisApi::Organization.find_all(client: client)
+ArtemisApi::Facility.find_all(client: client)
 ```
 
 To get facility information about a single Artemis Organization or Facility that you have access to, by its Artemis ID:
 ```ruby
-ArtemisApi::Organization.find(1, client)
-ArtemisApi::Facility.find(2, client)
+client.organization(1)
+client.facility(2)
+
+ArtemisApi::Organization.find(id: 1, client: client)
+ArtemisApi::Facility.find(id: 2, client: client)
 ```
 
 Other models are scoped by facility, so you have to include the Facility id in the call. (You can also get information about other Artemis Users besides your own account this way.)
 
-To get all Users associated with the Facility with an ID of 2:
+To get all Users associated with the Facility with an ID of 2, again there are two methods. You can call directly to the User class, or you can query through a facility.
 ```ruby
-ArtemisApi::User.find_all(2, client)
+client.facility(2).users
+
+ArtemisApi::User.find_all(facility_id: 2, client: client)
 ```
 
 To get a single User, with id 12, which must also be associated with Facility 2:
 ```ruby
-ArtemisApi::User.find(12, 2, client)
+client.facility(2).user(12)
+
+ArtemisApi::User.find(id: 12, facility_id: 2, client: client)
 ```
 
-You can get info about Batches, Zones, Completions, Harvests, Discards, SeedingUnits and HarvestUnits in a similar manner. Here are some examples, but the syntax is the same for all of those models:
+You can get info about Batches, Zones, SeedingUnits, HarvestUnits and Subscriptions in the same manner. Here are a couple examples, but the syntax is all the same.
 ```ruby
-ArtemisApi::Batch.find_all(2, client)
-ArtemisApi::Batch.find(22, 2, client)
+client.facility(2).batches
+client.facility(2).batch(22)
 
-ArtemisApi::Zone.find_all(2, client)
-ArtemisApi::Zone.find(4, 2, client)
+ArtemisApi::Batch.find_all(facility_id: 2, client: client)
+ArtemisApi::Batch.find(id: 22, facility_id: 2, client: client)
 
-ArtemisApi::Completion.find_all(2, client)
-ArtemisApi::Completion.find(30, 2, client)
+client.facility(2).seeding_units
+client.facility(2).seeding_unit(4)
 
-ArtemisApi::SeedingUnit.find_all(2, client)
-ArtemisApi::SeedingUnit.find(17, 2, client)
+ArtemisApi::SeedingUnit.find_all(facility_id: 2, client: client)
+ArtemisApi::SeedingUnit.find(id: 4, facility_id: 2, client: client)
 ```
 
-Additionally, Items are scoped by both Facility and Batch:
+Completions, Harvests and Discards can be queried through a Batch object in a similar way. Again, you can also call directly to the class. Note that in the above examples, querying through facility or the class will give you the exact same results: that isn't true in this case. Querying through the batch will return only objects associated with that batch, while doing a `find_all` on the class will give you all objects associated with the entire facility.
 ```ruby
-ArtemisApi::Item.find_all(2, 22, client)
+client.facility(2).batch(22).harvests
+client.facility(2).batch(22).discards
+client.facility(2).batch(22).completions
+
+client.facility(2).batch(22).harvest(47)
+
+ArtemisApi::Harvest.find_all(facility_id: 2, client: client)
+ArtemisApi::Harvest.find(id: 47, facility_id: 2, client: client)
 ```
 
-If you have a Facility object, you can also get zones and batches that are associated with it.
-
-And if you have a Batch object, you can get all the Completions, Items, Harvests and Discards that are associated with it. (Items can also accept an optional seeding_unit_id param.)
+Additionally, Items are scoped by both Facility and Batch, so both are required even if you call directly to the Item class. There is also an optional `seeding_unit_id` param if you query through a batch.
 ```ruby
-facility = ArtemisApi::Facility.find(2, client)
+client.facility(2).batch(22).items
+client.facility(2).batch(22).items(seeding_unit_id: 17)
 
-facility.zones
-facility.find_zone(4)
-
-facility.batches
-batch = facility.find_batch(22)
-
-batch.completions
-batch.harvests
-batch.discards
-batch.items(seeding_unit_id: 17)
+ArtemisApi::Item.find_all(facility_id: 2, batch_id: 22, client: client)
 ```
 
 Once you have queried info about a certain object, it will be stored in a hash called `objects` that exists on your active `client` object. Then, if you have to query the same object again, it can be pulled from that hash instead of doing another actual call to the API, to speed up performance. If you need to actually hit the API again for the most updated information, you can force the query like this:
 ```ruby
-facility = ArtemisApi::Facility.find(2, client, force: true)
+facility = ArtemisApi::Facility.find(id: 2, client: client, force: true)
 ```
 
 Additionally, you can optionally include other models in your call that have a relationship with the model you're querying. They will then be included in the payload and added into the objects hash for your `client` for easier querying in the future.
 
 ```ruby
-ArtemisApi::Facility.find(2, client, include: "users")
-ArtemisApi::Batch.find(22, 2, client, include: "completions")
+ArtemisApi::Facility.find(id: 2, client: client, include: "users")
+ArtemisApi::Batch.find(id: 22, facility_id: 2, client: client, include: "completions")
 ```
 
-We also support filtering on the Batch and Completion models. It is another optional param and it expects a hash. Here's what that should look like.
+We also support filtering on several models: Batch, Completion, Discard, Harvest, Zone, Item. It is another optional param and it expects a hash. Here's what that should look like.
 
 ```ruby
-ArtemisApi::Batch.find_all(facility_id, client, filters: {view: 'all_batches', search: 'genovese basil'})
-ArtemisApi::Batch.find_all(facility_id, client, filters: {ids: [2, 4, 6, 11]})
-ArtemisApi::Completion.find_all(facility_id, client, filters: {crop_batch_ids: [5]})
+ArtemisApi::Batch.find_all(facility_id: 2, client: client, filters: {view: 'all_batches', search: 'genovese basil'})
+ArtemisApi::Batch.find_all(facility_id: 2, client: client, filters: {ids: [2, 4, 6, 11]})
+ArtemisApi::Completion.find_all(facility_id: 2, client: client, filters: {crop_batch_ids: [5]})
+ArtemisApi::Harvest.find_all(facility_id: 2, client: client, filters: {crop_batch_ids: [5, 7]})
+ArtemisApi::Discard.find_all(facility_id: 2, client: client, filters: {crop_batch_ids: [6, 7, 9]})
+ArtemisApi::Zone.find_all(facility_id: 2, client: client, filters: {seeding_unit_id: 3})
+ArtemisApi::Item.find_all(facility_id: 2, batch_id: 22, client: client, filters: {seeding_unit_id: 8})
 ```
 
 Note that when you filter by ids or crop_batch_ids, you must pass in an array even if it only has one element.
+
+The Artemis API is currently mainly read only, but we do support the creation of Subscriptions. These are used to set up webhooks that will make a callback to you whenever a Completion or Batch gets created or updated in the given facility. They require a `subject`, which can currently be either `completions` or `batches`, and a `destination`, which is the url that you want the callback to hit. There are two ways to make that call:
+
+```ruby
+ArtemisApi::Subscription.create(facility_id: 2,
+                                subject: 'completions',
+                                destination: 'https://test-app-url.artemisag.io/v1/webhook',
+                                client: client)
+
+facility.create_subscription(subject: 'completions', destination: 'https://test-app-url.artemisag.io/v1/webhook')
+```
 
 ## Development
 

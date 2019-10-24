@@ -13,12 +13,12 @@ class CompletionTest < Minitest::Test
   end
 
   def test_finding_all_completions
-    completions = ArtemisApi::Completion.find_all(@facility.id, @client)
+    completions = ArtemisApi::Completion.find_all(facility_id: @facility.id, client: @client)
     assert_equal 2, completions.count
   end
 
   def test_finding_a_specific_completion
-    completion = ArtemisApi::Completion.find(2, @facility.id, @client)
+    completion = ArtemisApi::Completion.find(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 'move', completion.action_type
   end
 end

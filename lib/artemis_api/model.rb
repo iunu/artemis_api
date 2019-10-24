@@ -4,13 +4,14 @@ module ArtemisApi
 
     def self.related_to_one(name)
       self.send(:define_method, name.to_sym) do
-        @client.find_one(self.relationships[name].type, self.relationships[name].id)
+        relationship = relationships[name.to_s]['data']
+        @client.find_one(relationship['type'], relationship['id'])
       end
     end
 
     def self.related_to_many(name)
       self.send(:define_method, name.to_sym) do
-        @client.find_all(self.relationships[name].type)
+        @client.find_all(self.relationships[name.to_s]['data']['type'])
       end
     end
 

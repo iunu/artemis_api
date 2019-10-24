@@ -11,7 +11,8 @@ require 'artemis_api/discard'
 require 'artemis_api/harvest'
 require 'artemis_api/seeding_unit'
 require 'artemis_api/harvest_unit'
-require 'artemis_api/items'
+require 'artemis_api/item'
+require 'artemis_api/subscription'
 
 module ArtemisApi
   # Your code goes here...
