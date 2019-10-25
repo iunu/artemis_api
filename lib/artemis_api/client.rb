@@ -80,7 +80,15 @@ module ArtemisApi
     end
 
     def get_record(type, id)
-      @objects[type]&.[](id.to_i)
+      @objects.dig(type, id.to_i)
+    end
+
+    def remove_record(type, id)
+      @objects[type].delete(id.to_i) if record_stored?(type, id)
+    end
+
+    def record_stored?(type, id)
+      get_record(type, id).present?
     end
 
     def remove_record(type, id)

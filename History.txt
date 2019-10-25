@@ -1,0 +1,16 @@
+# coding: UTF-8
+
+=== 0.2.1 / 2019-10-15
+
+* Minor updates to documentation
+
+=== 0.2.0 / 2019-10-24
+
+* Added the ability to delete Subscriptions
+
+=== 0.1.0 / 2019-10-03
+
+* Initial public release of the Artemis API wrapper
+
+Includes initial support for the following Artemis classes:
+User, Facility, Organization, Batch, Zone, Completion, Harvest, Discard, HarvestUnit, SeedingUnit, Item, Subscription
