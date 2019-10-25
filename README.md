@@ -7,6 +7,12 @@ This is a simple API wrapper for the [Artemis](https://artemisag.com/) API.
 Add this line to your application's Gemfile:
 
 ```ruby
+gem 'artemis_api'
+```
+
+If you want to ensure the most up to date version, you can also use the gem straight from the repository:
+
+```ruby
 gem 'artemis_api', :git => 'https://github.com/artemis-ag/artemis_api'
 ```
 
@@ -166,6 +172,12 @@ ArtemisApi::Subscription.create(facility_id: 2,
                                 client: client)
 
 facility.create_subscription(subject: 'completions', destination: 'https://test-app-url.artemisag.io/v1/webhook')
+```
+
+You can also delete one of your own Subscriptions. Trying to delete a Subscription that isn't associated with your user account will fail.
+
+```ruby
+ArtemisApi::Subscription.delete(id: 1, facility_id: 2, client: client)
 ```
 
 ## Development
