@@ -27,12 +27,16 @@ module ArtemisApi
       if !obj || force
         refresh if @oauth_token.expired?
 
-        url = if facility_id
-                "#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/#{type}/#{id}"
-              else
-                "#{@options[:base_uri]}/api/v3/#{type}/#{id}"
-              end
-        url = "#{url}?include=#{include}" if include
+        path = if facility_id
+                 "/api/v3/facilities/#{facility_id}/#{type}/#{id}"
+               else
+                 "/api/v3/#{type}/#{id}"
+               end
+
+        query = {}
+        query[:include] = include if include
+
+        url = build_url(path: path, query: URI.encode_www_form(query))
 
         response = @oauth_token.get(url)
         obj = process_response(response, type) if response.status == 200
@@ -44,25 +48,30 @@ module ArtemisApi
       records = []
       refresh if @oauth_token.expired?
 
-      url = if facility_id && batch_id
-              "#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/#{type}"
-            elsif facility_id && batch_id.nil?
-              "#{@options[:base_uri]}/api/v3/facilities/#{facility_id}/#{type}"
-            else
-              "#{@options[:base_uri]}/api/v3/#{type}"
-            end
+      path = if facility_id && batch_id
+               "/api/v3/facilities/#{facility_id}/batches/#{batch_id}/#{type}"
+             elsif facility_id && batch_id.nil?
+               "/api/v3/facilities/#{facility_id}/#{type}"
+             else
+               "/api/v3/#{type}"
+             end
 
-      url = "#{url}?include=#{include}" if include
-      if filters
-        formatted_filters = format_filters(filters)
-        url = (include) ? "#{url}&#{formatted_filters}" : "#{url}?#{formatted_filters}"
-      end
+      query = {}
+      query[:include] = include if include
+      format_filters(filters, query) if filters
+
+      url = build_url(path: path, query: URI.encode_www_form(query))
 
       response = @oauth_token.get(url)
       if response.status == 200
         records = process_array(response, type, records)
       end
       records
+    end
+
+    def build_url(path:, query: nil)
+      uri = URI::Generic.build(path: path, query: query)
+      @options[:base_uri] + uri.to_s
     end
 
     def store_record(type, id, data)
@@ -80,6 +89,10 @@ module ArtemisApi
 
     def record_stored?(type, id)
       get_record(type, id).present?
+    end
+
+    def remove_record(type, id)
+      @objects[type].delete(id.to_i)
     end
 
     def refresh
@@ -133,18 +146,14 @@ module ArtemisApi
       end
     end
 
-    def format_filters(filter_hash)
-      filter_string = ''
+    def format_filters(filter_hash, query_hash)
       filter_hash.each do |k, v|
         if v.kind_of?(Array)
-          v.each do |item|
-            filter_string += "filter[#{k}][]=#{item}&"
-          end
+          query_hash[:"filter[#{k}][]"] = v
         else
-          filter_string += "filter[#{k}]=#{v}&"
+          query_hash[:"filter[#{k}]"] = v
         end
       end
-      filter_string
     end
   end
 end
