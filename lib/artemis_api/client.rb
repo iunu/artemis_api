@@ -146,13 +146,10 @@ module ArtemisApi
       end
     end
 
-    def format_filters3(filter_hash, query_hash)
+    def format_filters(filter_hash, query_hash)
       filter_hash.each do |k, v|
         if v.kind_of?(Array)
-          v.each do |item|
-            # TODO: This doesn't work
-            query_hash[:"filter[#{k}]"] = "[#{k}][]=#{item}"
-          end
+          query_hash[:"filter[#{k}][]"] = v
         else
           query_hash[:"filter[#{k}]"] = v
         end
