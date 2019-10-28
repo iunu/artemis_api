@@ -1,8 +1,11 @@
 # coding: UTF-8
 
-=== 0.2.1 / 2019-10-15
+=== 0.2.1 / 2019-10-28
 
 * Minor updates to documentation
+* Fix errors with gem installation
+* Don't try to delete a record if it doesn't exist
+* Using URI module to generate API urls
 
 === 0.2.0 / 2019-10-24
 
