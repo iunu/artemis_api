@@ -33,10 +33,10 @@ module ArtemisApi
                  "/api/v3/#{type}/#{id}"
                end
 
-        query = ''
-        query += "include=#{include}" if include
+        query = {}
+        query[:include] = include if include
 
-        url = build_url(path: path, query: query)
+        url = build_url(path: path, query: URI.encode_www_form(query))
 
         response = @oauth_token.get(url)
         obj = process_response(response, type) if response.status == 200
@@ -56,11 +56,11 @@ module ArtemisApi
                "/api/v3/#{type}"
              end
 
-      query = ''
-      query += "include=#{include}" if include
-      query += format_filters(filters) if filters
+      query = {}
+      query[:include] = include if include
+      format_filters(filters, query) if filters
 
-      url = build_url(path: path, query: query)
+      url = build_url(path: path, query: URI.encode_www_form(query))
 
       response = @oauth_token.get(url)
       if response.status == 200
@@ -146,18 +146,17 @@ module ArtemisApi
       end
     end
 
-    def format_filters(filter_hash)
-      filter_string = ''
+    def format_filters3(filter_hash, query_hash)
       filter_hash.each do |k, v|
         if v.kind_of?(Array)
           v.each do |item|
-            filter_string += "filter[#{k}][]=#{item}&"
+            # TODO: This doesn't work
+            query_hash[:"filter[#{k}]"] = "[#{k}][]=#{item}"
           end
         else
-          filter_string += "filter[#{k}]=#{v}&"
+          query_hash[:"filter[#{k}]"] = v
         end
       end
-      filter_string
     end
   end
 end
