@@ -10,6 +10,9 @@ class HarvestTest < Minitest::Test
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/harvests/2")
       .to_return(body: {data: {id: '2', type: 'harvests', attributes: {id: 2, quantity: 1, harvest_type: 'partial'}}}.to_json)
+
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/harvests?filter[crop_batch_ids][]=2&filter[crop_batch_ids][]=3")
+      .to_return(body: {data: [{id: '1', type: 'harvests', attributes: {id: 1, quantity: 4, harvest_type: 'complete'}}]}.to_json)
   end
 
   def test_finding_all_harvests
@@ -21,5 +24,10 @@ class HarvestTest < Minitest::Test
     harvest = ArtemisApi::Harvest.find(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 'partial', harvest.harvest_type
     assert_equal 1, harvest.quantity
+  end
+
+  def test_filtering_harvest_by_crop_batch_ids
+    harvests = ArtemisApi::Harvest.find_all(facility_id: @facility.id, client: @client, filters: {crop_batch_ids: [2, 3]})
+    assert_equal 1, harvests.count
   end
 end
