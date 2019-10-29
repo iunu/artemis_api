@@ -22,4 +22,22 @@ class ClientTest < Minitest::Test
     user = @client.current_user
     assert_equal user.class, ArtemisApi::User
   end
+
+  def test_remove_record
+    get_client
+
+    type = 'subscriptions'
+
+    # model type added once, removed twice
+    @client.store_record(type, 1, 'id' => 1)
+    assert_equal 1, @client.get_record(type, 1).id
+    @client.remove_record(type, 1)
+    assert_nil @client.get_record(type, 1)
+    assert_nothing_raised { @client.remove_record(type, 1) }
+
+    # model type not added, attempt to remove one
+    undefined_type = 'something'
+    assert_nil @client.instance_variable_get(:"@objects")[undefined_type]
+    assert_nothing_raised { @client.remove_record(undefined_type, 1) }
+  end
 end
