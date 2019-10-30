@@ -15,6 +15,29 @@ class ClientTest < Minitest::Test
     assert_equal false, @client.oauth_token.expired?
   end
 
+  def test_creating_a_client_instance_with_auth_code
+    stub_request(:post, 'http://localhost:3000/oauth/token')
+      .with(body: {"client_id"=>"12345",
+                    "client_secret"=>"67890",
+                    "code"=>"aJ7xsj7",
+                    "grant_type"=>"authorization_code",
+                    "redirect_uri"=>"urn:ietf:wg:oauth:2.0:oob"})
+      .to_return(status: 200, body: {access_token: 'ya29', refresh_token: 'eyJh', expires_in: 7200, token_type: 'Bearer', created_at: Time.now.to_i}.to_json, headers: { 'Content-Type'=> 'application/json;charset=UTF-8'})
+
+    options = {app_id: '12345',
+               app_secret: '67890',
+               base_uri: 'http://localhost:3000'}
+    @client = ArtemisApi::Client.new(auth_code: 'aJ7xsj7', options: options)
+
+    assert_equal '12345', @client.oauth_client.id
+    assert_equal 'ya29', @client.oauth_token.token
+    assert_equal false, @client.oauth_token.expired?
+  end
+
+  def test_creating_an_invalid_client_instance
+    assert_raises(ArgumentError) { ArtemisApi::Client.new(access_token: 'ya29') }
+  end
+
   def test_current_user
     get_client
     stub_user

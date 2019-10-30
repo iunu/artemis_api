@@ -4,22 +4,38 @@ module ArtemisApi
     attr_reader :options, :objects, :access_token, :refresh_token, :oauth_client,
                 :oauth_token, :expires_at
 
-    def initialize(access_token:, refresh_token:, expires_at:, options: {})
+    def initialize(access_token: nil, refresh_token: nil, expires_at: nil, auth_code: nil, redirect_uri: nil, options: {})
+      unless (access_token && refresh_token && expires_at) || auth_code
+        raise ArgumentError.new('You must either provide your access token, refresh token & expires at time, or an authorization code.')
+      end
+
       options[:app_id] ||= ENV['ARTEMIS_OAUTH_APP_ID']
       options[:app_secret] ||= ENV['ARTEMIS_OAUTH_APP_SECRET']
       options[:base_uri] ||= ENV['ARTEMIS_BASE_URI']
       @options = options
-      @access_token = access_token
-      @refresh_token = refresh_token
-      @expires_at = expires_at
+      @objects = {}
 
       @oauth_client = OAuth2::Client.new(@options[:app_id], @options[:app_secret], site: @options[:base_uri])
-      @oauth_token = OAuth2::AccessToken.from_hash(
-                      oauth_client,
-                      {access_token: @access_token,
-                       refresh_token: @refresh_token,
-                       expires_at: @expires_at})
-      @objects = {}
+
+      if access_token && refresh_token && expires_at
+        @access_token = access_token
+        @refresh_token = refresh_token
+        @expires_at = expires_at.to_i
+
+        @oauth_token = OAuth2::AccessToken.from_hash(
+                        oauth_client,
+                        {access_token: @access_token,
+                         refresh_token: @refresh_token,
+                         expires_at: @expires_at})
+      elsif auth_code
+        redirect_uri ||= 'urn:ietf:wg:oauth:2.0:oob'
+
+        @oauth_token = @oauth_client.auth_code.get_token(auth_code, redirect_uri: redirect_uri)
+
+        @access_token = @oauth_token.token
+        @refresh_token = @oauth_token.refresh_token
+        @expires_at = @oauth_token.expires_at
+      end
     end
 
     def find_one(type, id, facility_id: nil, include: nil, force: false)
