@@ -26,13 +26,15 @@ Or install it yourself as:
 
 ## Usage
 
+#### Instantiating your Client
+
 In order to use this gem, you will need to be set up as a developer in the Artemis Portal. If you're not, please contact Artemis CS in order to get that settled.
 
 Once you have developer access, go to Settings and choose "OAuth 2.0 Applications" at the bottom of the sidebar to set up an application by entering the name and redirect URI you wish to use. You will then be provided with an application ID and a secret ID, which you will need in order to authenticate with Artemis.
 
-(Please note that this gem doesn't currently handle OAuth. You will need to do that on your own in order to generate your access token and refresh token. We recommend using the [OAuth2 gem](https://github.com/oauth-xx/oauth2). You'll also need to pass in the `expires_at` for when your token will exipire.)
+The first step to actually using this gem is to instantiate an instance of `ArtemisApi::Client` and there are two different ways to do so depending on if you're handling OAuth in your own app or not.
 
-Once you have all this info, the first step to actually using this gem is to instantiate an instance of `ArtemisApi::Client` - which requires an access token, a refresh token,
+If you intend to do a full OAuth flow, we recommend using the [OAuth2 gem](https://github.com/oauth-xx/oauth2). After authenticating with OAuth and generating your access token and refresh token, you can use them to instantiate your Client instance. You'll also need to pass in the `expires_at` for when your token will expire. That looks like this:
 
 ```ruby
 options = {app_id: 'your_artemis_application_id',
@@ -45,7 +47,7 @@ client = ArtemisApi::Client.new(access_token: 'your_access_token',
                                 options: options)
 ```
 
-Alternatively, instead of passing in options, you can set those values as ENV variables called `ENV['ARTEMIS_OAUTH_APP_ID']`, `ENV['ARTEMIS_OAUTH_APP_SECRET']` and `ENV['ARTEMIS_BASE_URI']`
+Instead of passing in options, you can set those values as ENV variables called `ENV['ARTEMIS_OAUTH_APP_ID']`, `ENV['ARTEMIS_OAUTH_APP_SECRET']` and `ENV['ARTEMIS_BASE_URI']`
 
 They will be automatically detected and then you don't have to pass in any options:
 ```ruby
@@ -53,6 +55,18 @@ client = ArtemisApi::Client.new(access_token: 'your_access_token',
                                 refresh_token: 'your_refresh_token',
                                 expires_at: token_expires_at)
 ```
+
+Alternatively, if you're working on a command line tool or otherwise not intending to implement a full OAuth flow, you can generate an authorization code directly and pass it in while instantiating your client. Do this by creating an OAuth application in your Artemis settings with `urn:ietf:wg:oauth:2.0:oob` as the callback url. Then, clicking the Authorize button directly beside it on your application show page will provide you directly with an authorization code. Pass it into the Client instantiator like this. (The same rules apply about either passing in options or setting your ENV variables.)
+
+```ruby
+client = ArtemisApi::Client.new(auth_code: 'your_generated_authorization_code')
+```
+
+This can also take an optional `redirect_uri` named param, which you can pass through if you have another callback url you're using. Otherwise if you don't pass anything through that param, it will default to the `urn:ietf:wg:oauth:2.0:oob` address.
+
+Providing your authorization code like this will do the authorization through OAuth for you and create and store your access tokens for you so you don't have to worry about them.
+
+#### Requesting data from Artemis
 
 Once you have a client instance, you can use it to request information from Artemis.
 
