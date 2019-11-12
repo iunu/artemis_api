@@ -9,8 +9,8 @@ module ArtemisApi
       client.find_one(self.json_type, id, facility_id: facility_id, include: include, force: force)
     end
 
-    def self.find_all(client:, facility_id:, include: nil, filters: nil)
-      client.find_all(self.json_type, facility_id: facility_id, include: include, filters: filters)
+    def self.find_all(client:, facility_id:, include: nil, filters: nil, page: nil)
+      client.find_all(self.json_type, facility_id: facility_id, include: include, filters: filters, page: page)
     end
 
     def completions(include: nil)
