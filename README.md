@@ -166,8 +166,10 @@ ArtemisApi::Batch.find(id: 22, facility_id: 2, client: client, include: "complet
 We also support filtering on several models: Batch, Completion, Discard, Harvest, Zone, Item. It is another optional param and it expects a hash. Here's what that should look like.
 
 ```ruby
-ArtemisApi::Batch.find_all(facility_id: 2, client: client, filters: {view: 'all_batches', search: 'genovese basil'})
+ArtemisApi::Batch.find_all(facility_id: 2, client: client, filters: {search: 'genovese basil'})
 ArtemisApi::Batch.find_all(facility_id: 2, client: client, filters: {ids: [2, 4, 6, 11]})
+ArtemisApi::Batch.find_all(facility_id: 2, client: client, filters: {date_type: 'seeded_at', date_window: "2019-10-31 17:06:42 -0400,2019-11-15 17:06:42 -0500"})
+
 ArtemisApi::Completion.find_all(facility_id: 2, client: client, filters: {crop_batch_ids: [5]})
 ArtemisApi::Harvest.find_all(facility_id: 2, client: client, filters: {crop_batch_ids: [5, 7]})
 ArtemisApi::Discard.find_all(facility_id: 2, client: client, filters: {crop_batch_ids: [6, 7, 9]})
@@ -176,6 +178,12 @@ ArtemisApi::Item.find_all(facility_id: 2, batch_id: 22, client: client, filters:
 ```
 
 Note that when you filter by ids or crop_batch_ids, you must pass in an array even if it only has one element.
+
+Pagination is also supported on batches, and is also an optional param that expects a hash. We use the limit/offset method of pagination.
+
+```ruby
+ArtemisApi::Batch.find_all(facility_id: 2, client: client, page: {limit: 10, offset: 60})
+```
 
 The Artemis API is currently mainly read only, but we do support the creation of Subscriptions. These are used to set up webhooks that will make a callback to you whenever a Completion or Batch gets created or updated in the given facility. They require a `subject`, which can currently be either `completions` or `batches`, and a `destination`, which is the url that you want the callback to hit. There are two ways to make that call:
 
