@@ -1,5 +1,11 @@
 # coding: UTF-8
 
+=== 0.4.0 / 2019-11-14
+
+* Added pagination functionality to Batch queries
+* Cleaned up filtering and added tests
+* Documentation updates
+
 === 0.3.0 / 2019-11-04
 
 * Added an alternative OAuth flow that can accept an authorization code
