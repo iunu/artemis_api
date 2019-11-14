@@ -60,6 +60,9 @@ class DiscardTest < Minitest::Test
 
       stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/discards")
         .to_return(body: {data: [{id: '1', type: 'discards', attributes: {id: 1, reason_type: 'disease', quantity: 20}}, {id: '2', type: 'discards', attributes: {id: 2, reason_type: 'pests', quantity: 5}}]}.to_json)
+
+      stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/discards?filter[crop_batch_ids][]=2&filter[crop_batch_ids][]=3")
+        .to_return(body: {data: [{id: '1', type: 'discards', attributes: {id: 1, quantity: 4, reason_type: 'pests'}}]}.to_json)
   end
 
   def test_finding_a_specific_discard
@@ -81,5 +84,10 @@ class DiscardTest < Minitest::Test
   def test_finding_all_discards
     discards = ArtemisApi::Discard.find_all(facility_id: @facility.id, client: @client)
     assert_equal 2, discards.count
+  end
+
+  def test_filtering_discard_by_crop_batch_ids
+    discards = ArtemisApi::Discard.find_all(facility_id: @facility.id, client: @client, filters: {crop_batch_ids: [2, 3]})
+    assert_equal 1, discards.count
   end
 end

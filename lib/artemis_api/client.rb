@@ -60,7 +60,7 @@ module ArtemisApi
       obj
     end
 
-    def find_all(type, facility_id: nil, batch_id: nil, include: nil, filters: nil)
+    def find_all(type, facility_id: nil, batch_id: nil, include: nil, filters: nil, page: nil)
       records = []
       refresh if @oauth_token.expired?
 
@@ -75,6 +75,7 @@ module ArtemisApi
       query = {}
       query[:include] = include if include
       format_filters(filters, query) if filters
+      format_pagination(page, query) if page
 
       url = build_url(path: path, query: URI.encode_www_form(query))
 
@@ -161,6 +162,12 @@ module ArtemisApi
         else
           query_hash[:"filter[#{k}]"] = v
         end
+      end
+    end
+
+    def format_pagination(page_hash, query_hash)
+      page_hash.each do |k, v|
+        query_hash[:"page[#{k}]"] = v
       end
     end
   end
