@@ -42,6 +42,14 @@ module ArtemisApi
       ArtemisApi::SeedingUnit.find(id: unit_id, facility_id: id, client: client, include: include)
     end
 
+    def resource_units(include: nil)
+      ArtemisApi::ResourceUnit.find_all(facility_id: id, client: client, include: include)
+    end
+
+    def resource_unit(unit_id, include: nil)
+      ArtemisApi::ResourceUnit.find(id: unit_id, facility_id: id, client: client, include: include)
+    end
+
     def harvest_units(include: nil)
       ArtemisApi::HarvestUnit.find_all(facility_id: id, client: client, include: include)
     end
