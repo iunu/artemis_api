@@ -9,10 +9,16 @@ class CompletionTest < Minitest::Test
       .to_return(body: {data: [{id: '1', type: 'completions', attributes: {id: 1, action_type: 'start'}}, {id: '2', type: 'completions', attributes: {id: 2, action_type: 'move'}}]}.to_json)
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/completions/2")
-      .to_return(body: {data: {id: '2', type: 'completions', attributes: {id: 2, action_type: 'move'}}}.to_json)
+      .to_return(body: {data: {id: '2', type: 'completions', attributes: {id: 2, action_type: 'move'}, relationships: { batch: { data: { id: 1, type: 'batches' }}}}}.to_json)
+
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/completions/2")
+      .to_return(body: {data: {id: '2', type: 'completions', attributes: {id: 2, action_type: 'move'}, relationships: { batch: { data: { id: 1, type: 'batches' }}}}}.to_json)
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/completions?filter[crop_batch_ids][]=2&filter[crop_batch_ids][]=3")
       .to_return(body: {data: [{id: '1', type: 'completions', attributes: {id: 1, action_type: 'start'}}]}.to_json)
+
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/completions?filter[parent_id]=2")
+      .to_return(body: {data: [{id: '3', type: 'completions', attributes: {id: 3, action_type: 'process'}}, {id: '4', type: 'completions', attributes: {id: 4, action_type: 'process'}}]}.to_json)
   end
 
   def test_finding_all_completions
