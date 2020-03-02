@@ -80,9 +80,8 @@ class BatchTest < Minitest::Test
     beginning = ending - 15.days
     date_window = [beginning, ending].join(',')
 
-    # TODO: Figure out how the filtering syntax goes.
-    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/batches?filter[date_type]=seeded_at&filter[date_window]=#{date_window}")
-      .to_return(body: {data: [{id: '1', type: 'batches', attributes: {id: 1, arbitrary_id: 'Oct16-Gem-Let'}}, {id: '2', type: 'batches', attributes: {id: 2, name: 'Oct19-Bok-Cho'}}]}.to_json)
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/batches?filter[date_type]=seeded_at&filter[date_window]=#{CGI.escape(date_window)}")
+      .to_return(body: {data: [{id: 'd1', type: 'batches', attributes: {id: 1, arbitrary_id: 'Oct16-Gem-Let'}}, {id: '2', type: 'batches', attributes: {id: 2, name: 'Oct19-Bok-Cho'}}]}.to_json)
 
     batches = ArtemisApi::Batch.find_all(facility_id: @facility.id, client: @client, filters: {date_type: "seeded_at", date_window: date_window})
     assert_equal 2, batches.count

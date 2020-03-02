@@ -13,11 +13,11 @@ module ArtemisApi
       client.find_all(self.json_type, facility_id: facility_id, include: include, filters: filters, page: page)
     end
 
-    def completions(include: nil)
+    def completions(include: nil, filters: {})
       ArtemisApi::Completion.find_all(facility_id: facility_id,
                                       client: client,
                                       include: include,
-                                      filters: {crop_batch_ids: [id]})
+                                      filters: {crop_batch_ids: [id]}.with_indifferent_access.merge(filters))
     end
 
     def completion(completion_id, include: nil)
