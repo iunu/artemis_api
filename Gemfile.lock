@@ -34,7 +34,7 @@ GEM
       rack (>= 1.2, < 3)
     public_suffix (3.1.1)
     rack (2.0.8)
-    rake (10.5.0)
+    rake (13.0.1)
     safe_yaml (1.0.5)
     thread_safe (0.3.6)
     tzinfo (1.2.5)
@@ -53,7 +53,7 @@ DEPENDENCIES
   bundler (~> 1.16)
   minitest (~> 5.0)
   oauth2
-  rake (~> 10.0)
+  rake (~> 13.0)
   webmock
 
 BUNDLED WITH
