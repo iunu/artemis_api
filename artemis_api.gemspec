@@ -27,4 +27,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "oauth2"
   spec.add_development_dependency "webmock"
   spec.add_development_dependency "activesupport"
+  spec.add_development_dependency "rack-test"
+  spec.add_development_dependency "rails-html-sanitizer"
+  spec.add_development_dependency "rails-dom-testing"
+  spec.add_development_dependency "erubi"
+  spec.add_development_dependency "method_source"
 end
