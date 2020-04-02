@@ -56,15 +56,17 @@ client = ArtemisApi::Client.new(access_token: 'your_access_token',
                                 expires_at: token_expires_at)
 ```
 
-Alternatively, if you're working on a command line tool or otherwise not intending to implement a full OAuth flow, you can generate an authorization code directly and pass it in while instantiating your client. Do this by creating an OAuth application in your Artemis settings with `urn:ietf:wg:oauth:2.0:oob` as the callback url. Then, clicking the Authorize button directly beside it on your application show page will provide you directly with an authorization code. Pass it into the Client instantiator like this. (The same rules apply about either passing in options or setting your ENV variables.)
+Alternatively, if you're working on a command line tool or otherwise not intending to implement a full OAuth flow, you can generate an authorization code directly and use this code to obtain an access token and a refresh token.
+Do this by creating an OAuth application in your Artemis settings with `urn:ietf:wg:oauth:2.0:oob` as the callback url. Then, clicking the Authorize button directly on Artemis Portal beside it on your application show page will
+provide you directly with an authorization code. Pass it into the Client instantiator like this. (The same rules apply about either passing in options or setting your ENV variables.)
 
 ```ruby
 client = ArtemisApi::Client.new(auth_code: 'your_generated_authorization_code')
 ```
 
-This can also take an optional `redirect_uri` named param, which you can pass through if you have another callback url you're using. Otherwise if you don't pass anything through that param, it will default to the `urn:ietf:wg:oauth:2.0:oob` address.
-
-Providing your authorization code like this will do the authorization through OAuth for you and create and store your access tokens for you so you don't have to worry about them.
+This authorization code is only valid for one use. If you want to keep connecting using the same authorization grant, you
+need to save the values of `client.access_token`, `client.refresh_token` and `client.expires_at` and use them when
+reinstantiating `client` in the future.
 
 #### Requesting data from Artemis
 
