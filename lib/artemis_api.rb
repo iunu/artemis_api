@@ -14,6 +14,7 @@ require 'artemis_api/harvest_unit'
 require 'artemis_api/resource_unit'
 require 'artemis_api/item'
 require 'artemis_api/subscription'
+require 'artemis_api/stage'
 
 module ArtemisApi
   # Your code goes here...
