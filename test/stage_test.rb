@@ -3,10 +3,10 @@ require "test_helper"
 class StageTest < Minitest::Test
   def setup
     get_client
+    get_facility
 
     stub_request(:get, 'http://localhost:3000/api/v3/facilities/2')
       .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}}.to_json)
-    @facility = ArtemisApi::Facility.find(2, @client)
 
     stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/stages")
       .to_return(body: {data: [{id: '1', type: 'stages', attributes: {id: 1, name: 'Growth', stage_type: 'growth'}}, {id: '2', type: 'stages', attributes: {id: 2, name: 'Stage 2', stage_type: 'stage_2'}}]}.to_json)
@@ -32,7 +32,7 @@ class StageTest < Minitest::Test
   end
 
   def test_finding_a_specific_stage_through_facility
-    stage = @facility.find_stage(1)
+    stage = @facility.stage(1)
     assert_equal 'Growth', stage.name
     assert_equal 'growth', stage.stage_type
   end
