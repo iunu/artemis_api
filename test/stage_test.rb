@@ -8,10 +8,10 @@ class StageTest < Minitest::Test
     stub_request(:get, 'http://localhost:3000/api/v3/facilities/2')
       .to_return(body: {data: {id: '2', type: 'facilities', attributes: {id: 2, name: 'Rare Dankness'}}}.to_json)
 
-    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/stages")
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/stages?include=sub_stages,zones")
       .to_return(body: {data: [{id: '1', type: 'stages', attributes: {id: 1, name: 'Growth', stage_type: 'growth'}}, {id: '2', type: 'stages', attributes: {id: 2, name: 'Stage 2', stage_type: 'stage_2'}}]}.to_json)
 
-    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/stages/1")
+    stub_request(:get, "http://localhost:3000/api/v3/facilities/#{@facility.id}/stages/1?include=sub_stages,zones")
       .to_return(body: {data: {id: '1', type: 'stages', attributes: {id: 1, name: 'Growth', stage_type: 'growth'}}}.to_json)
   end
 
