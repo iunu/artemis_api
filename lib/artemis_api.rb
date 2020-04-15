@@ -15,6 +15,7 @@ require 'artemis_api/resource_unit'
 require 'artemis_api/item'
 require 'artemis_api/subscription'
 require 'artemis_api/stage'
+require 'artemis_api/sub_stage'
 
 module ArtemisApi
   # Your code goes here...
