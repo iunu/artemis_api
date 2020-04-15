@@ -54,11 +54,11 @@ module ArtemisApi
     end
 
     def method_missing(name)
-      attributes[name.to_s] || super
+      respond_to_missing?(name) ? attributes[name.to_s] : super
     end
 
     def respond_to_missing?(name)
-      attributes.key?(name)
+      attributes.key?(name.to_s)
     end
 
     def initialize(client, data)
