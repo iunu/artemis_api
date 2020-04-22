@@ -7,6 +7,11 @@ module ArtemisApi
         register_relationship(name)
 
         send(:define_method, name.to_sym) do
+          related_id = relationships.dig(name.to_s, 'data', 'id')
+          included = client.get_record(name.to_s, related_id)
+
+          return included if included.present?
+
           relationship = relationships[name.to_s]['data']
           @client.find_one(relationship['type'], relationship['id'])
         end

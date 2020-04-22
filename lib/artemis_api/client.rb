@@ -144,6 +144,7 @@ module ArtemisApi
         record = store_record(type, obj['id'], obj)
         records << record
       end
+
       process_included_objects(json['included']) if json['included']
 
       records
