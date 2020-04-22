@@ -12,7 +12,9 @@ module ArtemisApi
 
           return included if included.present?
 
-          relationship = relationships[name.to_s]['data']
+          relationship = relationships.dig(name.to_s, 'data')
+          return if relationship.nil?
+
           @client.find_one(relationship['type'], relationship['id'])
         end
       end
