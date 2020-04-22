@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    artemis_api (0.6.1)
+    artemis_api (0.7.0)
       oauth2
 
 GEM
@@ -14,6 +14,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
+    byebug (11.1.2)
     concurrent-ruby (1.1.5)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
@@ -52,6 +53,7 @@ DEPENDENCIES
   activesupport
   artemis_api!
   bundler (~> 1.16)
+  byebug
   minitest (~> 5.0)
   rake (~> 13.0)
   webmock

@@ -1,6 +1,7 @@
 module ArtemisApi
   class ResourceUnit < ArtemisApi::Model
     json_type 'resource_units'
+    related_to_one :crop_variety
 
     def self.find(id:, facility_id:, client:, include: nil, force: false)
       client.find_one(self.json_type, id, facility_id: facility_id, include: include, force: force)
