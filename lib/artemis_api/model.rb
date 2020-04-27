@@ -10,12 +10,12 @@ module ArtemisApi
           related_id = relationships.dig(name.to_s, 'data', 'id')
           included = client.get_record(name.to_s, related_id)
 
-          return included if included.present?
+          return included if included&.present?
 
           relationship = relationships.dig(name.to_s, 'data')
           return if relationship.nil?
 
-          @client.find_one(relationship['type'], relationship['id'])
+          @client.find_one(relationship['type'], relationship['id']) unless relationship['id'].to_s.empty? || relationship['id'].nil?
         end
       end
 
@@ -27,7 +27,7 @@ module ArtemisApi
             client.get_record(name.to_s, related['id'])
           end
 
-          return included if included.present?
+          return included if included&.present?
 
           @client.find_all(
             relationships.dig(name.to_s, 'data', 0, 'type') || name.to_s,
