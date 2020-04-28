@@ -91,9 +91,9 @@ module ArtemisApi
       @options[:base_uri] + uri.to_s
     end
 
-    def store_record(type, id, data)
+    def store_record(type, id, data, included = nil)
       @objects[type] ||= {}
-      @objects[type][id.to_i] = ArtemisApi::Model.instance_for(type, data, self)
+      @objects[type][id.to_i] = ArtemisApi::Model.instance_for(type, data, included, self)
     end
 
     def get_record(type, id)
@@ -130,8 +130,8 @@ module ArtemisApi
 
     def process_response(response, type)
       json = JSON.parse(response.body)
-      obj = store_record(type, json['data']['id'].to_i, json['data'])
-      process_included_objects(json['included']) if json['included']
+      included = process_included_objects(json['included']) if json['included']
+      obj = store_record(type, json['data']['id'].to_i, json['data'], included)
 
       obj
     end
@@ -151,14 +151,23 @@ module ArtemisApi
     end
 
     def process_included_objects(included_array)
+      included = {}
       included_array.each do |included_obj|
-        store_record(included_obj['type'], included_obj['id'], included_obj)
+        type = included_obj['type']
+        obj = store_record(type, included_obj['id'], included_obj)
+
+        next unless obj
+
+        included[type.to_sym] = [] unless included.key?(type.to_sym)
+        included[type.to_sym].push(obj)
       end
+
+      included
     end
 
     def format_filters(filter_hash, query_hash)
       filter_hash.each do |k, v|
-        if v.kind_of?(Array)
+        if v.is_a?(Array)
           query_hash[:"filter[#{k}][]"] = v
         else
           query_hash[:"filter[#{k}]"] = v
