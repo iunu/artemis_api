@@ -1,6 +1,6 @@
 module ArtemisApi
   class Model
-    attr_reader :client, :id, :attributes, :relationships
+    attr_reader :client, :id, :attributes, :relationships, :included
 
     class << self
       def related_to_one(name)
@@ -45,8 +45,8 @@ module ArtemisApi
         @json_type
       end
 
-      def instance_for(type, data, client)
-        @@registered_classes[type]&.new(client, data)
+      def instance_for(type, data, included, client)
+        @@registered_classes[type]&.new(client, data, included)
       end
 
       def relationships
@@ -68,11 +68,12 @@ module ArtemisApi
       attributes.key?(name.to_s)
     end
 
-    def initialize(client, data)
+    def initialize(client, data, included = nil)
       @client = client
       @id = data['id'].to_i
       @attributes = data['attributes']
       @relationships = data['relationships']
+      @included = included
     end
 
     def inspect

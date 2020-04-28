@@ -4,6 +4,8 @@ module ArtemisApi
     related_to_one :zone
     related_to_one :seeding_unit
     related_to_one :harvest_unit
+    related_to_many :custom_data
+    related_to_many :custom_fields
 
     def self.find(id:, client:, facility_id:, include: nil, force: false)
       client.find_one(self.json_type, id, facility_id: facility_id, include: include, force: force)

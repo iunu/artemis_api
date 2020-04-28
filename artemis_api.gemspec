@@ -1,4 +1,3 @@
-
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "artemis_api/version"
@@ -6,10 +5,10 @@ require "artemis_api/version"
 Gem::Specification.new do |spec|
   spec.name          = "artemis_api"
   spec.version       = ArtemisApi::VERSION
-  spec.authors       = ["Jamey Hampton"]
-  spec.email         = ["jhampton@artemisag.com"]
+  spec.authors       = ["Jamey Hampton", "Carlos Betancourt Carrero"]
+  spec.email         = ["jhampton@artemisag.com", "cbetancourt@artemisag.com"]
 
-  spec.summary       = %q{An API wrapper for the ArtemisAg API}
+  spec.summary       = "An API wrapper for the ArtemisAg API"
   spec.homepage      = "https://github.com/artemis-ag/artemis_api/"
   spec.license       = "MIT"
 
@@ -23,10 +22,10 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "oauth2"
 
-  spec.add_development_dependency "bundler", "~> 1.16"
-  spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "minitest", "~> 5.0"
-  spec.add_development_dependency "webmock"
   spec.add_development_dependency "activesupport"
-  spec.add_development_dependency "byebug"
+  spec.add_development_dependency "bundler", "~> 1.16"
+  spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "pry"
+  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "webmock"
 end
