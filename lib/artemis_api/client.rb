@@ -1,10 +1,21 @@
 module ArtemisApi
   class Client
     require 'oauth2'
-    attr_reader :options, :objects, :access_token, :refresh_token, :oauth_client,
-                :oauth_token, :expires_at
+    attr_reader :options, :objects,
+                :oauth_client, :oauth_token,
+                :access_token, :refresh_token, :expires_at,
+                :on_token_refreshed, :on_token_failed
 
-    def initialize(access_token: nil, refresh_token: nil, expires_at: nil, auth_code: nil, redirect_uri: nil, options: {})
+    def initialize(
+      access_token: nil,
+      refresh_token: nil,
+      expires_at: nil,
+      auth_code: nil,
+      redirect_uri: nil,
+      on_token_refreshed: nil,
+      on_token_failed: nil,
+      options: {}
+    )
       unless (access_token && refresh_token && expires_at) || auth_code
         raise ArgumentError.new('You must either provide your access token, refresh token & expires at time, or an authorization code.')
       end
@@ -15,8 +26,29 @@ module ArtemisApi
       @options = options
       @objects = {}
 
+      @on_token_refreshed = on_token_refreshed
+      @on_token_failed = on_token_failed
+
       @oauth_client = OAuth2::Client.new(@options[:app_id], @options[:app_secret], site: @options[:base_uri])
 
+      if auth_code
+        redirect_uri ||= 'urn:ietf:wg:oauth:2.0:oob'
+
+        @oauth_token = @oauth_client.auth_code.get_token(auth_code, redirect_uri: redirect_uri)
+
+        @access_token = @oauth_token.token
+        @refresh_token = @oauth_token.refresh_token
+        @expires_at = @oauth_token.expires_at
+      else
+        set_oauth_token_from_parts(
+          access_token: access_token,
+          refresh_token: refresh_token,
+          expires_at: expires_at
+        )
+      end
+    end
+
+    def set_oauth_token_from_parts(access_token:, refresh_token:, expires_at:)
       if access_token && refresh_token && expires_at
         @access_token = access_token
         @refresh_token = refresh_token
@@ -25,23 +57,15 @@ module ArtemisApi
         @oauth_token = OAuth2::AccessToken.from_hash(
                         oauth_client,
                         {access_token: @access_token,
-                         refresh_token: @refresh_token,
-                         expires_at: @expires_at})
-      elsif auth_code
-        redirect_uri ||= 'urn:ietf:wg:oauth:2.0:oob'
-
-        @oauth_token = @oauth_client.auth_code.get_token(auth_code, redirect_uri: redirect_uri)
-
-        @access_token = @oauth_token.token
-        @refresh_token = @oauth_token.refresh_token
-        @expires_at = @oauth_token.expires_at
+                        refresh_token: @refresh_token,
+                        expires_at: @expires_at})
       end
     end
 
     def find_one(type, id, facility_id: nil, include: nil, force: false)
       obj = get_record(type, id)
       if !obj || force
-        refresh if @oauth_token.expired?
+        auto_refresh!
 
         path = if facility_id
                  "/api/v3/facilities/#{facility_id}/#{type}/#{id}"
@@ -62,7 +86,7 @@ module ArtemisApi
 
     def find_all(type, facility_id: nil, batch_id: nil, include: nil, filters: nil, page: nil)
       records = []
-      refresh if @oauth_token.expired?
+      auto_refresh!
 
       path = if facility_id && batch_id
                "/api/v3/facilities/#{facility_id}/batches/#{batch_id}/#{type}"
@@ -104,8 +128,26 @@ module ArtemisApi
       @objects[type]&.delete(id.to_i)
     end
 
-    def refresh
+    def auto_refresh!
+      refresh! if @oauth_token.expired?
+    end
+
+    def refresh!
+      old_refresh_token = @oauth_token.refresh_token
+
       @oauth_token = @oauth_token.refresh!
+
+      if old_refresh_token != @oauth_token.refresh_token
+        on_token_refreshed && on_token_refreshed.call(self, @oauth_token, old_refresh_token)
+      end
+      @oauth_token
+    rescue OAuth2::Error => err
+      if on_token_failed
+        on_token_failed.call(self, @oauth_token, err)
+        @oauth_token
+      else
+        raise err
+      end
     end
 
     def facilities(include: nil)
