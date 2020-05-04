@@ -5,8 +5,8 @@ require "artemis_api/version"
 Gem::Specification.new do |spec|
   spec.name          = "artemis_api"
   spec.version       = ArtemisApi::VERSION
-  spec.authors       = ["Jamey Hampton", "Carlos Betancourt Carrero"]
-  spec.email         = ["jhampton@artemisag.com", "cbetancourt@artemisag.com"]
+  spec.authors       = ["Jamey Hampton", "Carlos Betancourt Carrero", "Sebastian Delmont"]
+  spec.email         = ["jhampton@artemisag.com", "cbetancourt@artemisag.com", "sdelmont@artemisag.com"]
 
   spec.summary       = "An API wrapper for the ArtemisAg API"
   spec.homepage      = "https://github.com/artemis-ag/artemis_api/"

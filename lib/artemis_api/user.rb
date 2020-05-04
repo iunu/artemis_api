@@ -5,7 +5,7 @@ module ArtemisApi
 
     def self.get_current(client:, include: nil)
       self.json_type
-      client.refresh if client.oauth_token.expired?
+      client.auto_refresh!
       url = "#{client.options[:base_uri]}/api/v3/user"
       url = "#{url}?include=#{include}" if include
       response = client.oauth_token.get(url)
