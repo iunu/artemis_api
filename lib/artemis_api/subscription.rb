@@ -11,7 +11,7 @@ module ArtemisApi
     end
 
     def self.create(facility_id:, subject:, destination:, client:)
-      client.oauth_token.refresh! if client.oauth_token.expired?
+      client.auto_refresh!
 
       url = "#{client.options[:base_uri]}/api/v3/facilities/#{facility_id}/subscriptions"
       params = { body: { subscription: { subject: subject, destination: destination } } }
@@ -22,7 +22,7 @@ module ArtemisApi
     end
 
     def self.delete(id:, facility_id:, client:)
-      client.oauth_token.refresh! if client.oauth_token.expired?
+      client.auto_refresh!
 
       url = "#{client.options[:base_uri]}/api/v3/facilities/#{facility_id}/subscriptions/#{id}"
 
