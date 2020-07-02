@@ -7,21 +7,22 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.3)
+    activesupport (6.0.3.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+      zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
     coderay (1.1.2)
-    concurrent-ruby (1.1.5)
+    concurrent-ruby (1.1.6)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     hashdiff (0.4.0)
-    i18n (1.6.0)
+    i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     jwt (2.2.1)
     method_source (1.0.0)
@@ -43,12 +44,13 @@ GEM
     rake (13.0.1)
     safe_yaml (1.0.5)
     thread_safe (0.3.6)
-    tzinfo (1.2.5)
+    tzinfo (1.2.7)
       thread_safe (~> 0.1)
     webmock (3.6.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    zeitwerk (2.3.0)
 
 PLATFORMS
   ruby
