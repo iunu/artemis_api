@@ -53,11 +53,11 @@ class SubscriptionTest < Minitest::Test
 
   def test_deleting_a_subscription
     # find the subscription first to ensure it's in the objects hash
-    subscription = ArtemisApi::Subscription.find(id: 2, facility_id: @facility.id, client: @client)
+    ArtemisApi::Subscription.find(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 1, @client.objects['subscriptions'].count
 
     # then delete it and ensure it has been removed from the objects hash
-    result = ArtemisApi::Subscription.delete(id: 2, facility_id: @facility.id, client: @client)
+    ArtemisApi::Subscription.delete(id: 2, facility_id: @facility.id, client: @client)
     assert_equal 0, @client.objects['subscriptions'].count
   end
 end

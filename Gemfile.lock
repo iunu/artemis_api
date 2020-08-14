@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    artemis_api (0.7.3)
+    artemis_api (0.7.4)
       oauth2
 
 GEM
@@ -65,4 +65,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
