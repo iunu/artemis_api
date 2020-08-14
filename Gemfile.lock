@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    artemis_api (0.7.3)
+    artemis_api (0.7.4)
       oauth2
 
 GEM
@@ -39,7 +39,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (3.1.1)
-    rack (2.2.2)
+    rack (2.0.9)
     rake (13.0.1)
     safe_yaml (1.0.5)
     thread_safe (0.3.6)
@@ -63,4 +63,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
