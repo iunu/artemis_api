@@ -17,6 +17,7 @@ require 'artemis_api/item'
 require 'artemis_api/subscription'
 require 'artemis_api/stage'
 require 'artemis_api/sub_stage'
+require 'artemis_api/crop_batch_state'
 require 'artemis_api/custom_fields'
 require 'artemis_api/custom_data'
 
